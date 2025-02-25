@@ -1,43 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import TaskItem from "./TaskItem";
 
 const TaskList = () => {
   // Dummy data (to be replaced with API fetch)
-  const tasks = [
+  const [tasks, setTasks] = useState([
     { id: 1, title: "Fix bug in login", priority: "High", assignedTo: "John", dueDate: "2025-02-27" },
     { id: 2, title: "Design landing page", priority: "Medium", assignedTo: "Alice", dueDate: "2025-03-01" },
     { id: 3, title: "Update backend API", priority: "Low", assignedTo: "Bob", dueDate: "2025-03-03" },
-  ];
+  ]);
+
+  const handleComplete = (taskId) => {
+    setTasks(tasks.map(task => task.id === taskId ? { ...task, completed: true } : task));
+  };
+
+  const handleEdit = (task) => {
+    console.log("Edit Task:", task);
+  };
+
+  const handleDelete = (taskId) => {
+    setTasks(tasks.filter(task => task.id !== taskId));
+  };
 
   return (
-    <div className="task-list-container">
-      <h2>📋 Task Lists</h2>
-      <table className="task-table">
-        <thead>
-          <tr>
-            <th>Task</th>
-            <th>Priority</th>
-            <th>Assigned To</th>
-            <th>Due Date</th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.map((task) => (
-            <tr key={task.id} className={`priority-${task.priority.toLowerCase()}`}>
-              <td>{task.title}</td>
-              <td>{task.priority}</td>
-              <td>{task.assignedTo}</td>
-              <td>{task.dueDate}</td>
-              <td>
-                <Link to={`/task/${task.id}`} className="text-blue-500 underline">
-                  View
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4">📋 Task Lists</h2>
+      <div className="grid gap-4">
+        {tasks.map((task) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            onComplete={handleComplete}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        ))}
+      </div>
     </div>
   );
 };
