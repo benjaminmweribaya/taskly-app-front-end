@@ -1,5 +1,5 @@
-// src/components/Dashboard.jsx
 import React from "react";
+import TaskList from "./TaskList";
 
 const Dashboard = () => {
     // Placeholder data (to be fetched dynamically later)
@@ -18,16 +18,16 @@ const Dashboard = () => {
     return (
         <div className="dashboard-container">
             <h2>📊 Dashboard</h2>
-            <div className="stats">
-                <div className="stat-card-completed">
+            <div className="stats grid grid-cols-3 gap-4">
+                <div className="stat-card-completed bg-green-100 p-4 rounded">
                     <h3>✅ Completed Tasks</h3>
                     <p>{taskStats.completed}</p>
                 </div>
-                <div className="stat-card-pending">
+                <div className="stat-card-pending bg-yellow-100 p-4 rounded">
                     <h3>⏳ Pending Tasks</h3>
                     <p>{taskStats.pending}</p>
                 </div>
-                <div className="stat-card-overdue">
+                <div className="stat-card-overdue bg-red-100 p-4 rounded">
                     <h3>⚠️ Overdue Tasks</h3>
                     <p>{taskStats.overdue}</p>
                 </div>
@@ -37,11 +37,14 @@ const Dashboard = () => {
                 <ul>
                     {upcomingTasks.map((task) => (
                         <li key={task.id}>
-                        <span className="task-title">{task.title}</span> - Due:{" "}
-                        <strong>{task.dueDate}</strong>
-                      </li>
+                            <span className="task-title">{task.title}</span> - Due:{" "}
+                            <strong>{task.dueDate}</strong>
+                        </li>
                     ))}
                 </ul>
+            </div>
+            <div className="mt-6">
+                <TaskList />
             </div>
         </div>
     );

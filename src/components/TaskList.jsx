@@ -1,5 +1,5 @@
-// src/components/TaskList.jsx
 import React from "react";
+import { Link } from "react-router-dom";
 
 const TaskList = () => {
   // Dummy data (to be replaced with API fetch)
@@ -19,6 +19,7 @@ const TaskList = () => {
             <th>Priority</th>
             <th>Assigned To</th>
             <th>Due Date</th>
+            <th>Details</th>
           </tr>
         </thead>
         <tbody>
@@ -28,6 +29,11 @@ const TaskList = () => {
               <td>{task.priority}</td>
               <td>{task.assignedTo}</td>
               <td>{task.dueDate}</td>
+              <td>
+                <Link to={`/task/${task.id}`} className="text-blue-500 underline">
+                  View
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>
