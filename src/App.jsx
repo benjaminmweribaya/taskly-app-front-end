@@ -1,19 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Notifications from "./components/common/Notifications.jsx";
+import Sidebar from "./components/common/Sidebar.jsx";
+import Navbar from "./components/common/Navbar.jsx";
+import Footer from "./components/common/Footer.jsx";
 import Dashboard from "./components/dashboard/Dashboard.jsx";
 import TaskList from "./components/tasks/TaskList.jsx";
 import TaskDetails from "./components/tasks/TaskDetails.jsx";
+import ContactUs from "./pages/ContactUs.jsx";
+import LandingPage from "./pages/LandingPage.jsx";
+import NotFound from "./pages/NotFound.jsx";
 import { socket } from "./socket";
-import ContactUs from "./components/pages/ContactUs.js";
-import Footer from "./components/pages/Footer.js";
-import Navbar from "./components/pages/Navbar.js";
-import LandingPage from "./components/pages/LandingPage.js";
-
 
 function App() {
-  const [count, setCount] = useState(0);
-
   useEffect(() => {
     socket.connect();
     return () => {
@@ -22,28 +21,26 @@ function App() {
   }, []);
 
   return (
-    <Route>
-      <Notifications />
-      <div className="p-4">
-        <h1 className="text-2xl font-bold">Taskly App</h1>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/tasks" element={<TaskList />} />
-          <Route path="/task/:taskId" element={<TaskDetails />} />
-        </Routes>
-        <ContactUs/>
-        <Footer/>
-        <Navbar/>
-        <LandingPage/>
-        
-        <button
-          className="bg-blue-500 text-white px-4 py-2 mt-4 rounded"
-          onClick={() => setCount((prev) => prev + 1)}
-        >
-          Count is {count}
-        </button>
+    <Router>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <div className="flex flex-1">
+          <Sidebar />
+          <main className="flex-1 p-4">
+            <Notifications />
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/tasks" element={<TaskList />} />
+              <Route path="/task/:taskId" element={<TaskDetails />} />
+              <Route path="/contact" element={<ContactUs />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+        </div>
+        <Footer />
       </div>
-    </Route>
+    </Router>
   );
 }
 
