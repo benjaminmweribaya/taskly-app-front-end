@@ -1,5 +1,5 @@
 import React from "react";
-import TaskList from "./TaskList";
+import TaskList from "../tasks/TaskList";
 
 const Dashboard = () => {
     // Placeholder data (to be fetched dynamically later)

@@ -1,4 +1,4 @@
-import TaskComments from "../components/TaskComments";
+import TaskComments from "./TaskComments";
 import { useParams } from "react-router-dom";
 
 const TaskDetails = () => {

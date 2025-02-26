@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Notifications from "./components/Notifications";
-import Dashboard from "./components/Dashboard";
-import TaskList from "./components/TaskList";
-import TaskDetails from "./pages/TaskDetails";
+import Notifications from "./components/common/Notifications.jsx";
+import Dashboard from "./components/dashboard/Dashboard.jsx";
+import TaskList from "./components/tasks/TaskList.jsx";
+import TaskDetails from "./components/tasks/TaskDetails.jsx";
 import { socket } from "./socket";
 import ContactUs from "./components/pages/ContactUs.js";
 import Footer from "./components/pages/Footer.js";
