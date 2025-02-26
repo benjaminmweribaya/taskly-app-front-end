@@ -5,6 +5,11 @@ import Dashboard from "./components/Dashboard";
 import TaskList from "./components/TaskList";
 import TaskDetails from "./pages/TaskDetails";
 import { socket } from "./socket";
+import ContactUs from "./components/pages/ContactUs.js";
+import Footer from "./components/pages/Footer.js";
+import Navbar from "./components/pages/Navbar.js";
+import LandingPage from "./components/pages/LandingPage.js";
+
 
 function App() {
   const [count, setCount] = useState(0);
@@ -26,6 +31,11 @@ function App() {
           <Route path="/tasks" element={<TaskList />} />
           <Route path="/task/:taskId" element={<TaskDetails />} />
         </Routes>
+        <ContactUs/>
+        <Footer/>
+        <Navbar/>
+        <LandingPage/>
+        
         <button
           className="bg-blue-500 text-white px-4 py-2 mt-4 rounded"
           onClick={() => setCount((prev) => prev + 1)}
