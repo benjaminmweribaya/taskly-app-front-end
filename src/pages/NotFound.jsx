@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const NotFound = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-center">
+    <div className="max-w-6xl mx-auto flex flex-col items-center justify-center h-screen text-center">
       <h1 className="text-6xl font-bold text-blue-600">404</h1>
       <p className="text-xl text-gray-600">Oops! Page not found.</p>
       <Link
