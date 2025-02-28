@@ -1,5 +1,6 @@
 import React from "react";
 import TaskList from "../tasks/TaskList";
+import Notifications from "../common/Notifications";
 
 const Dashboard = () => {
     // Placeholder data (to be fetched dynamically later)
@@ -18,6 +19,9 @@ const Dashboard = () => {
     return (
         <div className="dashboard-container">
             <h2>📊 Dashboard</h2>
+
+            <Notifications />
+            
             <div className="stats grid grid-cols-3 gap-4">
                 <div className="stat-card-completed bg-green-100 p-4 rounded">
                     <h3>✅ Completed Tasks</h3>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaHome, FaTasks, FaEnvelope, FaBars, FaTimes } from "react-icons/fa";
+import { FaHome, FaTasks, FaUser, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -36,12 +36,12 @@ const Sidebar = () => {
                     >
                         <FaTasks /> <span>Tasks</span>
                     </Link>
-                    <Link
-                        to="/contact"
-                        className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
-                    >
-                        <FaEnvelope /> <span>Contact Us</span>
+                    <Link to="/profile" className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700">
+                        <FaUser /> <span>Profile</span>
                     </Link>
+                    <button className="flex items-center space-x-2 p-2 rounded hover:bg-red-600">
+                        <FaSignOutAlt /> <span>Logout</span>
+                    </button>
                 </nav>
             </div>
 
