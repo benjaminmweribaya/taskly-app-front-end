@@ -1,6 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import HeroImage from "../assets/Hero.jpg";
+import FeatureImage from "../assets/Feature.jpg";
+import TeamImage from "../assets/Team.jpg";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -9,7 +12,7 @@ const LandingPage = () => {
     <div className="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
       <header
         className="relative w-full h-screen flex flex-col items-center justify-center text-center p-6 bg-cover bg-center"
-        style={{ backgroundImage: "url(/images/hero.jpg)" }}
+        style={{ backgroundImage: `url(${HeroImage})` }}
       >
         <div className="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0"></div>
         <motion.h1
@@ -31,36 +34,105 @@ const LandingPage = () => {
         </motion.button>
       </header>
 
-      <section className="py-20 px-10 text-center">
-        <h2 text-3xl font-semibold mb-8>Discover Taskly’s Powerful Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 justify-center">
-          {["feature1", "feature2"].map((feature, index) => (
+      {/* Features Section */}
+      <section className="py-20 px-10 text-center bg-gray-100 dark:bg-gray-900">
+        <h2 className="text-4xl font-extrabold mb-6 text-gray-900 dark:text-white">
+          Discover Taskly’s Powerful Features
+        </h2>
+        <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+          Taskly is designed to enhance your productivity with its intuitive features. Experience seamless task management
+          and communication like never before.
+        </p>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-12 items-center">
+
+          {/* Left Features */}
+          <div className="space-y-12">
             <motion.div
-              key={index}
-              className="flex flex-col items-center bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl"
+              className="flex flex-col items-center text-center lg:text-right"
               whileHover={{ scale: 1.05 }}
             >
-              <img src={`/images/${feature}.png`} alt={`Feature ${index + 1}`} className="w-40 h-40 mb-4" />
-              <h3 className="text-xl font-semibold">{index === 0 ? "Manage Tasks Efficiently" : "Collaboration Made Simple"}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {index === 0 ? "Organize tasks seamlessly with our intuitive UI." : "Work with your team in real-time and boost productivity."}
+              <i className="fas fa-cube text-3xl text-blue-500"></i>
+              <h3 className="text-xl font-semibold mt-3 text-gray-900 dark:text-white">User-Friendly Design</h3>
+              <p className="text-gray-600 dark:text-gray-300 mt-2 max-w-xs">
+                Navigate effortlessly with our clean, intuitive design tailored for optimal user experience.
               </p>
             </motion.div>
-          ))}
+
+            <motion.div
+              className="flex flex-col items-center text-center lg:text-right"
+              whileHover={{ scale: 1.05 }}
+            >
+              <i className="fas fa-tasks text-3xl text-blue-500"></i>
+              <h3 className="text-xl font-semibold mt-3 text-gray-900 dark:text-white">Robust Task Management</h3>
+              <p className="text-gray-600 dark:text-gray-300 mt-2 max-w-xs">
+                Create, assign, and track tasks efficiently to keep your projects on schedule.
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Center Image */}
+          <motion.img
+            src={FeatureImage}
+            alt="Feature Illustration"
+            className="w-full max-w-xs mx-auto rounded-lg shadow-lg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          />
+
+          {/* Right Features */}
+          <div className="space-y-12">
+            <motion.div
+              className="flex flex-col items-center text-center lg:text-left"
+              whileHover={{ scale: 1.05 }}
+            >
+              <i className="fas fa-comments text-3xl text-blue-500"></i>
+              <h3 className="text-xl font-semibold mt-3 text-gray-900 dark:text-white">Efficient Communication Channel</h3>
+              <p className="text-gray-600 dark:text-gray-300 mt-2 max-w-xs">
+                Collaborate seamlessly with team members through comments and notifications directly on tasks.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="flex flex-col items-center text-center lg:text-left"
+              whileHover={{ scale: 1.05 }}
+            >
+              <i className="fas fa-rocket text-3xl text-blue-500"></i>
+              <h3 className="text-xl font-semibold mt-3 text-gray-900 dark:text-white">Get Started Today</h3>
+              <p className="text-gray-600 dark:text-gray-300 mt-2 max-w-xs">
+                Join Taskly now and transform the way you manage your tasks and projects.
+              </p>
+            </motion.div>
+          </div>
+
         </div>
       </section>
 
-      <section className="py-20 px-10 bg-gray-200 dark:bg-gray-800 text-center">
-        <h2 className="text-3xl font-semibold mb-6">Unlock Your Team’s Potential with Taskly</h2>
+
+      {/* Team Section */}
+      <section className="py-20 px-10 bg-gray-200 dark:bg-gray-800 text-center md:text-left relative flex flex-col md:flex-row items-center md:items-start">
+        {/* Content */}
+        <div className="md:w-1/2">
+          <h2 className="text-3xl font-semibold mb-6">Unlock Your Team’s Potential with Taskly App</h2>
+          <p className="mt-4 text-gray-700 dark:text-gray-300">
+            Taskly empowers teams to enhance productivity by simplifying task tracking assignments. Experience seamless collaboration and watch your projects thrive.
+          </p>
+          <p className="mt-4 text-gray-700 dark:text-gray-300">
+            <strong>Boost Productivity.</strong> Achieve more in less time with organized task management and clear deadlines.
+          </p>
+        </div>
+
+        {/* Team Image Positioned at the Right */}
         <motion.img
-          src="/images/team.jpg"
+          src={TeamImage}
           alt="Team working"
-          className="w-full max-w-3xl mx-auto rounded-lg shadow-lg"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          className="w-96 rounded-lg shadow-lg mx-auto mt-8 md:mt-0 md:ml-10 md:w-1/2"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
         />
-        <p className="mt-4 text-gray-700 dark:text-gray-300">Empower your team to work smarter and accomplish goals faster.</p>
       </section>
 
       <section className="max-w-6xl mx-auto bg-white dark:bg-gray-800 p-10 rounded-lg shadow-md text-center my-12">
@@ -95,6 +167,7 @@ const LandingPage = () => {
         </blockquote>
       </section>
 
+      {/* Call-to-Action Section */}
       <section className="max-w-6xl mx-auto rounded-lg shadow-lgpx-12 py-10 bg-blue-500 text-white text-center">
         <p className="text-lg font-semibold">Start your free trial today</p>
         <motion.button
@@ -105,7 +178,7 @@ const LandingPage = () => {
           Sign Up
         </motion.button>
       </section>
-    </div>
+    </div >
   );
 };
 

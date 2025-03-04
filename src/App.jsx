@@ -14,6 +14,9 @@ import LandingPage from "./pages/LandingPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Signup from "./components/auth/Signup.jsx";
 import Profile from "./components/profile/Profile.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
+import TermsAndConditions from "./pages/TermsAndConditions.jsx";
+import Accessibility from "./pages/Accessibility.jsx";  
 import { socket } from "./socket";
 
 function App() {
@@ -43,6 +46,9 @@ function App() {
               <Route path="/services" element={<Services />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+              <Route path="/accessibility" element={<Accessibility />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
