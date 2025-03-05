@@ -1,26 +1,38 @@
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext"; 
+import { useAuth } from "../../context/AuthContext";
 
 const Profile = () => {
-    const { user, updateUser } = useAuth(); // Mock updateUser function
+    const { user, updateUser } = useAuth();
+
     const [formData, setFormData] = useState({
         username: user?.username || "",
         email: user?.email || "",
         password: "",
     });
 
+    const [message, setMessage] = useState("");
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        updateUser(formData); // Mock function to update user details
+
+        try {
+            // FIX: updateUser(formData) returns a Promise, so we should use await
+            await updateUser(formData);
+            setMessage("Profile updated successfully!");
+        } catch (error) {
+            setMessage("Failed to update profile.");
+        }
+            
     };
 
     return (
         <div className="p-6 max-w-md mx-auto bg-white rounded-lg shadow-md">
             <h2 className="text-xl font-bold mb-4">User Profile</h2>
+            {message && <p className="text-green-600 mb-4">{message}</p>}
             <form onSubmit={handleSubmit}>
                 <label className="block mb-2">Username</label>
                 <input
@@ -50,7 +62,7 @@ const Profile = () => {
                 />
 
                 <button type="submit" className="bg-blue-600 text-white p-2 rounded w-full">
-                    Update Profile
+                   Update Profile
                 </button>
             </form>
         </div>

@@ -26,7 +26,10 @@ const Signup = () => {
         values
       );
       console.log("Signup Success:", response.data);
-      navigate("/login");
+
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      navigate("/dashboard");
     } catch (error) {
       if (error.response) {
         setErrors({ api: error.response.data.error || "Signup failed" });
