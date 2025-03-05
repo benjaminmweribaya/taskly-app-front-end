@@ -1,5 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
 
 const LoginModal = ({ onClose }) => {
   const navigate = useNavigate();
@@ -12,11 +15,11 @@ const LoginModal = ({ onClose }) => {
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      onClick={onClose} // Close when clicking outside the modal
+      onClick={onClose}
     >
       <div
         className="relative bg-white p-6 shadow-lg rounded-lg w-full max-w-md"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
@@ -29,54 +32,93 @@ const LoginModal = ({ onClose }) => {
           Login to Taskly
         </h2>
 
-        <form className="space-y-4">
-          <div>
-            <label className="block text-gray-600 text-sm font-semibold">
-              Email
-            </label>
-            <input
-              type="email"
-              placeholder="Enter email"
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={Yup.object({
+            email: Yup.string().email("Invalid email").required("Required"),
+            password: Yup.string().required("Required"),
+          })}
+          onSubmit={async (values, { setSubmitting, setErrors }) => {
+            try {
+              const response = await axios.post(
+                "https://taskly-app-q35u.onrender.com/login",
+                values
+              );
+              localStorage.setItem("access_token", response.data.access_token);
+              navigate("/dashboard");
+              if (onClose) onClose();
+            } catch (error) {
+              setErrors({ api: error.response?.data?.error || "Login failed" });
+            }
+            setSubmitting(false);
+          }}
+        >
+          {({ isSubmitting, errors }) => (
+            <Form className="space-y-4">
+              {errors.api && (
+                <div className="text-red-500 text-sm">{errors.api}</div>
+              )}
+              <div>
+                <label className="block text-gray-600 text-sm font-semibold">
+                  Email
+                </label>
+                <Field
+                  type="email"
+                  name="email"
+                  placeholder="Enter email"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </div>
 
-          <div>
-            <label className="block text-gray-600 text-sm font-semibold">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="Enter password"
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
+              <div>
+                <label className="block text-gray-600 text-sm font-semibold">
+                  Password
+                </label>
+                <Field
+                  type="password"
+                  name="password"
+                  placeholder="Enter password"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
-          >
-            Login
-          </button>
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Logging in..." : "Login"}
+              </button>
 
-          <button
-            type="button"
-            className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300"
-          >
-            Continue with Google
-          </button>
+              <button
+                type="button"
+                className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300"
+              >
+                Continue with Google
+              </button>
 
-          <p className="text-sm text-gray-600 text-center">
-            Don't have an account?{" "}
-            <span
-              onClick={handleSignupRedirect}
-              className="text-blue-500 hover:underline cursor-pointer">
-              Sign Up
-            </span>
-          </p>
-        </form>
+              <p className="text-sm text-gray-600 text-center">
+                Don't have an account?{" "}
+                <span
+                  onClick={handleSignupRedirect}
+                  className="text-blue-500 hover:underline cursor-pointer"
+                >
+                  Sign Up
+                </span>
+              </p>
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   );

@@ -1,97 +1,74 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
 
 const Signup = () => {
-  const [formData, setFormData] = useState({
+  const navigate = useNavigate();
+
+  const initialValues = {
     username: "",
     email: "",
     password: "",
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Signup Data:", formData);
-    // Add API request here
+  const validationSchema = Yup.object({
+    username: Yup.string().required("Username is required"),
+    email: Yup.string().email("Invalid email format").required("Email is required"),
+    password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  });
+
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+    try {
+      const response = await axios.post(
+        "https://taskly-app-q35u.onrender.com/register",
+        values
+      );
+      console.log("Signup Success:", response.data);
+      navigate("/login");
+    } catch (error) {
+      if (error.response) {
+        setErrors({ api: error.response.data.error || "Signup failed" });
+      }
+    }
+    setSubmitting(false);
+
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="bg-white p-8 shadow-lg rounded-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-gray-700 text-center mb-6">
-          Create an Account
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-600 text-sm font-semibold">
-              Username
-            </label>
-            <input
-              type="text"
-              name="username"
-              placeholder="Enter username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-600 text-sm font-semibold">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-600 text-sm font-semibold">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
-          >
-            Sign up
-          </button>
-
-          <button
-            type="button"
-            className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300"
-          >
-            Continue with Google
-          </button>
-
-          <p className="text-sm text-gray-600 text-center">
-            Already have an account?{" "}
-            <Link to="/login" className="text-blue-500 hover:underline">
-              Log in
-            </Link>
-          </p>
-        </form>
-      </div >
+        <h2 className="text-2xl font-bold text-gray-700 text-center mb-6">Create an Account</h2>
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+          {({ isSubmitting, errors }) => (
+            <Form className="space-y-4">
+              {errors.api && <p className="text-red-500 text-sm">{errors.api}</p>}
+              <div>
+                <label className="block text-gray-600 text-sm font-semibold">Username</label>
+                <Field type="text" name="username" className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400" />
+                <ErrorMessage name="username" component="div" className="text-red-500 text-sm" />
+              </div>
+              <div>
+                <label className="block text-gray-600 text-sm font-semibold">Email</label>
+                <Field type="email" name="email" className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400" />
+                <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
+              </div>
+              <div>
+                <label className="block text-gray-600 text-sm font-semibold">Password</label>
+                <Field type="password" name="password" className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400" />
+                <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
+              </div>
+              <button type="submit" disabled={isSubmitting} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                {isSubmitting ? "Signing up..." : "Sign up"}
+              </button>
+              <p className="text-sm text-gray-600 text-center">
+                Already have an account? <Link to="/login" className="text-blue-500 hover:underline">Log in</Link>
+              </p>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 };
