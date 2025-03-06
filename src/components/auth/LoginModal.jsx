@@ -33,10 +33,10 @@ const LoginModal = ({ onClose }) => {
         </h2>
 
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ identifier: "", password: "" }}
           validationSchema={Yup.object({
-            email: Yup.string().email("Invalid email").required("Required"),
-            password: Yup.string().required("Required"),
+            identifier: Yup.string().required("Email or Username is required"),
+            password: Yup.string().required("Password is required"),
           })}
           onSubmit={async (values, { setSubmitting, setErrors }) => {
             try {
@@ -45,6 +45,8 @@ const LoginModal = ({ onClose }) => {
                 values
               );
               localStorage.setItem("access_token", response.data.access_token);
+              localStorage.setItem("refresh_token", response.data.refresh_token);
+
               navigate("/dashboard");
               if (onClose) onClose();
             } catch (error) {
@@ -60,16 +62,16 @@ const LoginModal = ({ onClose }) => {
               )}
               <div>
                 <label className="block text-gray-600 text-sm font-semibold">
-                  Email
+                  Email or Username
                 </label>
                 <Field
-                  type="email"
-                  name="email"
-                  placeholder="Enter email"
+                  type="text"
+                  name="identifier"
+                  placeholder="Enter email or username"
                   className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
                 <ErrorMessage
-                  name="email"
+                  name="identifier"
                   component="div"
                   className="text-red-500 text-sm"
                 />
