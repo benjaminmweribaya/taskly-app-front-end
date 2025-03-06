@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import Sidebar from "./components/common/Sidebar.jsx";
 import Navbar from "./components/common/Navbar.jsx";
@@ -64,7 +64,7 @@ function MainLayout({ user }) {
             </Routes>
           </main>
         </div>
-        
+
         {!isDashboard && <Footer />}
       </div>
   );

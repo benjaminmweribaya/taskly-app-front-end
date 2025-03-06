@@ -22,7 +22,6 @@ const Dashboard = () => {
 
     return (
         <div className="flex">
-            {/* ✅ Sidebar */}
             <Sidebar />
 
             <div className="dashboard-container p-6">
