@@ -1,14 +1,16 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid";
+import LoginModal from "./LoginModal";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const togglePassword = () => setShowPassword(!showPassword);
   const toggleConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
@@ -39,7 +41,9 @@ const Signup = () => {
 
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
-      navigate("/dashboard");
+      await axios.post("https://taskly-app-q35u.onrender.com/send-verification-email", { email: values.email });
+
+      navigate(`/verify-email/${response.data.token}`);
     } catch (error) {
       if (error.response) {
         setErrors({ api: error.response.data.error || "Signup failed" });
@@ -101,12 +105,14 @@ const Signup = () => {
                 {isSubmitting ? "Signing up..." : "Sign up"}
               </button>
               <p className="text-sm text-gray-600 text-center">
-                Already have an account? <Link to="/login" className="text-blue-500 hover:underline">Log in</Link>
+                Already have an account?  <span className="text-blue-500 hover:underline cursor-pointer" onClick={() => setShowLoginModal(true)}>Log in</span>
               </p>
             </Form>
           )}
         </Formik>
       </div>
+
+      {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
     </div>
   );
 };

@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound.jsx";
 import Signup from "./components/auth/Signup.jsx";
 import ForgotPassword from "./components/auth/ForgotPassword.jsx";
 import ResetPassword from "./components/auth/ResetPassword.jsx";
+import VerifyEmail from "./components/auth/VerifyEmail.jsx";
 import Profile from "./components/profile/Profile.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import TermsAndConditions from "./pages/TermsAndConditions.jsx";
@@ -61,6 +62,7 @@ function MainLayout({ user, isLoginModalOpen, setIsLoginModalOpen }) {
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password/:token" element={<ResetPassword />} />
+              <Route path="/verify-email/:token" element={<VerifyEmail />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
