@@ -7,17 +7,17 @@ const Dashboard = () => {
     const [taskStats, setTaskStats] = useState({ completed: 0, pending: 0, overdue: 0 });
     const [upcomingTasks, setUpcomingTasks] = useState([]);
 
-    useEffect(() => {
+    //useEffect(() => {
         // Fetch task stats
-        axios.get("/api/task-stats").then((response) => {
-            setTaskStats(response.data);
-        }).catch((error) => console.error("Error fetching task stats:", error));
+        //axios.get("/api/task-stats").then((response) => {
+            //setTaskStats(response.data);
+        //}).catch((error) => console.error("Error fetching task stats:", error));
 
         // Fetch upcoming tasks
-        axios.get("/api/upcoming-tasks").then((response) => {
-            setUpcomingTasks(response.data);
-        }).catch((error) => console.error("Error fetching upcoming tasks:", error));
-    }, []);
+       // axios.get("/api/upcoming-tasks").then((response) => {
+            //setUpcomingTasks(response.data);
+        //}).catch((error) => console.error("Error fetching upcoming tasks:", error));
+   // }, []);
 
     return (
         <div className="dashboard-container p-6">
