@@ -31,10 +31,21 @@ function App() {
 
   return (
     <Router>
+      <MainLayout user={user} />
+    </Router>
+  );
+}
+function MainLayout({ user }) {
+  const location = useLocation();
+  const isDashboard = location.pathname === "/dashboard";
+
+  return (
       <div className="flex flex-col min-h-screen">
-        <Navbar />
+        {!isDashboard && <Navbar />}
+
         <div className="flex flex-1">
           {user &&<Sidebar />}
+
           <main className="flex-1 p-4">
             <Routes>
               <Route path="/" element={<LandingPage />} />
@@ -53,9 +64,9 @@ function App() {
             </Routes>
           </main>
         </div>
-        <Footer />
+        
+        {!isDashboard && <Footer />}
       </div>
-    </Router>
   );
 }
 
