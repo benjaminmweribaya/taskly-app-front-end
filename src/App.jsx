@@ -13,7 +13,8 @@ import Services from "./pages/Services.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Signup from "./components/auth/Signup.jsx";
-import LoginModal from "./components/auth/LoginModal.jsx";
+import ForgotPassword from "./components/auth/ForgotPassword.jsx";
+import ResetPassword from "./components/auth/ResetPassword.jsx";
 import Profile from "./components/profile/Profile.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import TermsAndConditions from "./pages/TermsAndConditions.jsx";
@@ -22,6 +23,7 @@ import { socket } from "./socket";
 
 function App() {
   const { user } = useAuth();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     socket.connect();
@@ -32,17 +34,17 @@ function App() {
 
   return (
     <Router>
-      <MainLayout user={user} />
+      <MainLayout user={user} isLoginModalOpen={isLoginModalOpen} setIsLoginModalOpen={setIsLoginModalOpen} />
     </Router>
   );
 }
-function MainLayout({ user }) {
+function MainLayout({ user, isLoginModalOpen, setIsLoginModalOpen }) {
   const location = useLocation();
-  const isDashboard = location.pathname === "/dashboard";
+  const isDashboard = location.pathname.startsWith("/dashboard") || location.pathname === "/dashboard";
 
   return (
       <div className="flex flex-col min-h-screen">
-        {!isDashboard && <Navbar />}
+        {!isDashboard && <Navbar onLogin={() => setIsLoginModalOpen(true)} />}
 
         <div className="flex flex-1">
           {user &&<Sidebar />}
@@ -57,7 +59,8 @@ function MainLayout({ user }) {
               <Route path="/about" element={<AboutUs />} />
               <Route path="/services" element={<Services />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/login" element={<LoginModal />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
@@ -68,6 +71,8 @@ function MainLayout({ user }) {
         </div>
 
         {!isDashboard && <Footer />}
+
+        {isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
       </div>
   );
 }

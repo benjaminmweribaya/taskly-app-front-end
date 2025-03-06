@@ -12,6 +12,10 @@ const LoginModal = ({ onClose }) => {
     navigate("/signup");
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = "https://taskly-app-q35u.onrender.com/auth/google";
+  };
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -24,6 +28,7 @@ const LoginModal = ({ onClose }) => {
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          aria-label="Close login modal"
         >
           ✕
         </button>
@@ -50,7 +55,7 @@ const LoginModal = ({ onClose }) => {
               navigate("/dashboard");
               if (onClose) onClose();
             } catch (error) {
-              setErrors({ api: error.response?.data?.error || "Login failed" });
+              setErrors({ api: error.response?.data?.error || "Login failed. Please check your credentials." });
             }
             setSubmitting(false);
           }}
@@ -104,10 +109,25 @@ const LoginModal = ({ onClose }) => {
 
               <button
                 type="button"
+                onClick={handleGoogleLogin}
                 className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300"
               >
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+                  alt="Google Logo"
+                  className="h-5 w-5 mr-2"
+                />
                 Continue with Google
               </button>
+
+              <p className="text-sm text-gray-600 text-center">
+                <span
+                  onClick={() => navigate("/forgot-password")}
+                  className="text-blue-500 hover:underline cursor-pointer"
+                >
+                  Forgot Password?
+                </span>
+              </p>
 
               <p className="text-sm text-gray-600 text-center">
                 Don't have an account?{" "}
