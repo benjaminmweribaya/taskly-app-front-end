@@ -13,6 +13,7 @@ import Services from "./pages/Services.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Signup from "./components/auth/Signup.jsx";
+import LoginModal from "./components/auth/LoginModal.jsx";
 import Profile from "./components/profile/Profile.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import TermsAndConditions from "./pages/TermsAndConditions.jsx";
@@ -56,6 +57,7 @@ function MainLayout({ user }) {
               <Route path="/about" element={<AboutUs />} />
               <Route path="/services" element={<Services />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<LoginModal />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />

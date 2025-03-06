@@ -1,13 +1,46 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaHome, FaTasks, FaUser, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        const token = localStorage.getItem("access_token");
+        if (!token) {
+            alert("You are already logged out!");
+            navigate("/login");
+            return;
+        }
+
+        try {
+            const response = await fetch("https://taskly-app-q35u.onrender.com/logout", {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.removeItem("access_token");  
+                localStorage.removeItem("refresh_token");
+                alert("Logged out successfully!");
+                navigate("/login");
+            } else {
+                alert(data.error || "Logout failed!");
+            }
+        } catch (error) {
+            console.error("Logout error:", error);
+            alert("An error occurred. Please try again.");
+        }
+    };
 
     return (
         <div>
-            {/* Mobile Toggle Button */}
             <button
                 className="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-2 rounded"
                 onClick={() => setIsOpen(!isOpen)}
@@ -15,7 +48,6 @@ const Sidebar = () => {
                 {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
             </button>
 
-            {/* Sidebar */}
             <div
                 className={`fixed inset-y-0 left-0 w-64 bg-gray-900 text-white transform ${isOpen ? "translate-x-0" : "-translate-x-full"
                     } md:translate-x-0 transition-transform duration-300 ease-in-out z-40`}
@@ -39,13 +71,12 @@ const Sidebar = () => {
                     <Link to="/profile" className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700">
                         <FaUser /> <span>Profile</span>
                     </Link>
-                    <button className="flex items-center space-x-2 p-2 rounded hover:bg-red-600">
+                    <button onClick={handleLogout} className="flex items-center space-x-2 p-2 rounded hover:bg-red-600">
                         <FaSignOutAlt /> <span>Logout</span>
                     </button>
                 </nav>
             </div>
 
-            {/* Overlay for Mobile */}
             {isOpen && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
