@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
-import Sidebar from "./components/common/Sidebar.jsx";
+import WorkspaceLayout from "./components/workspace/WorkspaceLayout.jsx";
 import Navbar from "./components/common/Navbar.jsx";
 import Footer from "./components/common/Footer.jsx";
-import Dashboard from "./components/dashboard/Dashboard.jsx";
-import TaskList from "./components/tasks/TaskList.jsx";
-import TaskDetails from "./components/tasks/TaskDetails.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
 import Services from "./pages/Services.jsx";
@@ -16,7 +13,6 @@ import Signup from "./components/auth/Signup.jsx";
 import ForgotPassword from "./components/auth/ForgotPassword.jsx";
 import ResetPassword from "./components/auth/ResetPassword.jsx";
 import VerifyEmail from "./components/auth/VerifyEmail.jsx";
-import Profile from "./components/profile/Profile.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import TermsAndConditions from "./pages/TermsAndConditions.jsx";
 import Accessibility from "./pages/Accessibility.jsx";  
@@ -41,11 +37,11 @@ function App() {
 }
 function MainLayout({ user, isLoginModalOpen, setIsLoginModalOpen }) {
   const location = useLocation();
-  const isDashboard = location.pathname.startsWith("/dashboard") || location.pathname === "/dashboard";
+  const isWorkspace = location.pathname.startsWith("/workspace");
 
   return (
       <div className="flex flex-col min-h-screen">
-        {!isDashboard && <Navbar onLogin={() => setIsLoginModalOpen(true)} />}
+        {!isWorkspace && <Navbar onLogin={() => setIsLoginModalOpen(true)} />}
 
         <div className="flex flex-1">
           {user &&<Sidebar />}
@@ -53,9 +49,6 @@ function MainLayout({ user, isLoginModalOpen, setIsLoginModalOpen }) {
           <main className="flex-1 p-4">
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/tasks" element={<TaskList />} />
-              <Route path="/task/:taskId" element={<TaskDetails />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/services" element={<Services />} />
@@ -63,16 +56,16 @@ function MainLayout({ user, isLoginModalOpen, setIsLoginModalOpen }) {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password/:token" element={<ResetPassword />} />
               <Route path="/verify-email/:token" element={<VerifyEmail />} />
-              <Route path="/profile" element={<Profile />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/accessibility" element={<Accessibility />} />
               <Route path="*" element={<NotFound />} />
+              <Route path="/workspace/*" element={<WorkspaceLayout />} />
             </Routes>
           </main>
         </div>
 
-        {!isDashboard && <Footer />}
+        {!isWorkspace && <Footer />}
 
         {isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
       </div>

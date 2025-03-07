@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import TaskList from "../tasks/TaskList";
-import Notifications from "../common/Notifications";
-import Sidebar from "../common/Sidebar";
+import TaskList from "./TaskList";
+import Notifications from "./Notifications";
+import Sidebar from "./Sidebar";
 import axios from "axios";
 
 const Dashboard = () => {

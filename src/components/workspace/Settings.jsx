@@ -1,16 +1,14 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
 
-const Profile = () => {
-    const { user, updateUser } = useAuth();
-
+const Settings = () => {
+    const { user, setUser } = useAuth();
     const [formData, setFormData] = useState({
         username: user?.username || "",
         email: user?.email || "",
         password: "",
     });
-
-    const [message, setMessage] = useState("");
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,21 +16,18 @@ const Profile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
-            // FIX: updateUser(formData) returns a Promise, so we should use await
-            await updateUser(formData);
-            setMessage("Profile updated successfully!");
+            const response = await axios.patch("/update-profile", formData);
+            setUser(response.data.user);
+            alert("Profile updated successfully");
         } catch (error) {
-            setMessage("Failed to update profile.");
+            alert("Error updating profile");
         }
-            
     };
 
     return (
-        <div className="p-6 max-w-md mx-auto bg-white rounded-lg shadow-md">
-            <h2 className="text-xl font-bold mb-4">User Profile</h2>
-            {message && <p className="text-green-600 mb-4">{message}</p>}
+        <div className="p-6 max-w-md mx-auto">
+            <h2 className="text-2xl font-semibold mb-4">Settings</h2>
             <form onSubmit={handleSubmit}>
                 <label className="block mb-2">Username</label>
                 <input
@@ -61,12 +56,15 @@ const Profile = () => {
                     className="w-full p-2 border rounded mb-4"
                 />
 
-                <button type="submit" className="bg-blue-600 text-white p-2 rounded w-full">
-                   Update Profile
+                <button
+                    type="submit"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg w-full"
+                >
+                    Update Profile
                 </button>
             </form>
         </div>
     );
-};
+}
 
-export default Profile;
+export default Settings

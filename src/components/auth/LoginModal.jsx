@@ -52,7 +52,7 @@ const LoginModal = ({ onClose }) => {
               localStorage.setItem("access_token", response.data.access_token);
               localStorage.setItem("refresh_token", response.data.refresh_token);
 
-              navigate("/dashboard");
+              navigate("/workspace");
               if (onClose) onClose();
             } catch (error) {
               setErrors({ api: error.response?.data?.error || "Login failed. Please check your credentials." });
