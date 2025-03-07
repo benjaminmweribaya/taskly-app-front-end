@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import LoginModal from "./LoginModal";
 
 const Signup = () => {
@@ -80,7 +80,7 @@ const Signup = () => {
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
                   />
                   <button type="button" onClick={togglePassword} className="absolute right-3 top-3">
-                    {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+                    {showPassword ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
                   </button>
                 </div>
                 <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
@@ -95,7 +95,7 @@ const Signup = () => {
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
                   />
                   <button type="button" onClick={toggleConfirmPassword} className="absolute right-3 top-3">
-                    {showConfirmPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+                    {showConfirmPassword ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
                   </button>
                 </div>
                 <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-sm" />
