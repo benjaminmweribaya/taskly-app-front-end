@@ -39,20 +39,18 @@ const Signup = () => {
       );
       console.log("Signup Success:", response.data);
 
-      const user = response.data.user;
-      localStorage.setItem("user", JSON.stringify(user));
+      const { user, access_token } = response.data;
+
+      sessionStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("access_token", access_token);
 
       //await axios.post("https://taskly-app-q35u.onrender.com/send-verification-email", { email: values.email });
 
-      if (user.workspace_id) {
-        navigate(`/workspace/${user.workspace_id}`);
-      } else {
-        navigate(`/workspace`); 
-      }
+      navigate(`/workspace/${user.workspace_id}`);
 
     } catch (error) {
       if (error.response) {
-        setErrors({ api: error.response.data.error || "Signup failed" });
+        setErrors({ api: error.response.data.error || "Signup failed. Please try again." });
       }
     }
     setSubmitting(false);
