@@ -24,6 +24,7 @@ export function AuthProvider({ children }) {
   const login = async (credentials) => {
     try {
       const response = await axios.post("/login", credentials, { withCredentials: true });
+      sessionStorage.setItem("access_token", response.data.access_token);
       setUser(response.data.user);
       return { success: true };
     } catch (error) {
@@ -35,6 +36,7 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     try {
       await axios.post("/logout", {}, { withCredentials: true });
+      sessionStorage.removeItem("access_token");
       setUser(null);
     } catch (error) {
       console.error("Logout failed:", error);
