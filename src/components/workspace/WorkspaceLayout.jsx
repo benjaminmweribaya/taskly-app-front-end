@@ -21,6 +21,7 @@ const WorkspaceLayout = () => {
 
   useEffect(() => {
     if (!socket.connected) {
+      socket.auth = { token: sessionStorage.getItem("access_token") }; 
       socket.connect();
     }
 

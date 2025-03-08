@@ -6,7 +6,7 @@ export const socket = io(SOCKET_URL, {
   transports: ["websocket", "polling"],
   withCredentials: true, 
   auth: {
-    token: sessionStorage.getItem("access_token"), 
+    token: sessionStorage.getItem("access_token") || null, 
   },
   reconnection: true, 
   reconnectionAttempts: 5, 
