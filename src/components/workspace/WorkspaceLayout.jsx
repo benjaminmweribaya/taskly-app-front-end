@@ -10,7 +10,7 @@ import Sidebar from "./Sidebar.jsx";
 import Profile from "./Profile.jsx";
 import Settings from "./Settings.jsx";
 import { useAuth } from "../../context/AuthContext";
-//import { socket } from "../../socket.js";
+import { socket } from "../../socket.js";
 
 const WorkspaceLayout = () => {
   const { user } = useAuth();
@@ -19,24 +19,24 @@ const WorkspaceLayout = () => {
     return <Navigate to="/signup" />;
   }
 
-  //useEffect(() => {
-    //if (!socket.connected) {
-      //socket.auth = { token: sessionStorage.getItem("access_token") }; 
-      //socket.connect();
-    //}
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.auth = { token: sessionStorage.getItem("access_token") }; 
+      socket.connect();
+    }
 
-    //socket.on("connect", () => {
-      //console.log("Connected to WebSocket");
-    //});
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket");
+    });
 
-    //socket.on("disconnect", () => {
-      //console.warn("Disconnected from WebSocket");
-    //});
+    socket.on("disconnect", () => {
+      console.warn("Disconnected from WebSocket");
+    });
 
-    //return () => {
-      //socket.disconnect();
-    //};
-  //}, []);
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <div className="flex h-screen">
