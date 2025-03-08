@@ -39,11 +39,17 @@ const Signup = () => {
       );
       console.log("Signup Success:", response.data);
 
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      const user = response.data.user;
+      localStorage.setItem("user", JSON.stringify(user));
 
-      await axios.post("https://taskly-app-q35u.onrender.com/send-verification-email", { email: values.email });
+      //await axios.post("https://taskly-app-q35u.onrender.com/send-verification-email", { email: values.email });
 
-      navigate(`/verify-email/${response.data.token}`);
+      if (user.workspace_id) {
+        navigate(`/workspace/${user.workspace_id}`);
+      } else {
+        navigate(`/workspace`); 
+      }
+
     } catch (error) {
       if (error.response) {
         setErrors({ api: error.response.data.error || "Signup failed" });
@@ -85,7 +91,7 @@ const Signup = () => {
                 </div>
                 <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
               </div>
-              
+
               <div className="relative">
                 <label className="block text-gray-600 text-sm font-semibold">Confirm Password</label>
                 <div className="relative">

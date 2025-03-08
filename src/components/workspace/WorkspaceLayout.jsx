@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
 import Dashboard from "./Dashboard.jsx";
 import TaskList from "./TaskList.jsx";
 import TaskDetails from "./TaskDetails.jsx";
@@ -17,10 +18,14 @@ const WorkspaceLayout = () => {
     return <Navigate to="/signup" />;
   }
 
+  useEffect(() => {
+    document.title = "Taskly";
+  }, []);
+
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <Sidebar />
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-4 overflow-auto">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/tasks-list" element={<TaskList />} />
