@@ -16,18 +16,10 @@ import VerifyEmail from "./components/auth/VerifyEmail.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import TermsAndConditions from "./pages/TermsAndConditions.jsx";
 import Accessibility from "./pages/Accessibility.jsx";  
-import { socket } from "./socket";
 
 function App() {
   const { user } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  useEffect(() => {
-    socket.connect();
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
 
   return (
     <Router>

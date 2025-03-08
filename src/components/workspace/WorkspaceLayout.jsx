@@ -10,16 +10,31 @@ import Sidebar from "./Sidebar.jsx";
 import Profile from "./Profile.jsx";
 import Settings from "./Settings.jsx";
 import { useAuth } from "../../context/AuthContext";
+import { socket } from "../../socket.js";
 
 const WorkspaceLayout = () => {
   const { user } = useAuth();
-  
+
   if (!user) {
     return <Navigate to="/signup" />;
   }
 
   useEffect(() => {
-    document.title = "Taskly";
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket");
+    });
+
+    socket.on("disconnect", () => {
+      console.warn("Disconnected from WebSocket");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   return (
