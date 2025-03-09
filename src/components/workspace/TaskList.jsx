@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import TaskItem from "./TaskItem";
 
 const TaskList = () => {
@@ -22,18 +21,24 @@ const TaskList = () => {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">📋 Task Lists</h2>
-      <div className="grid gap-4">
-        {tasks.map((task) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            onComplete={handleComplete}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        ))}
+    <div className="flex-1 p-6 ml-60 md:ml-56 lg:ml-72 transition-all">
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-bold text-gray-700 mb-6 flex items-center">📋 Task Lists</h2>
+        {tasks.length === 0 ? (
+          <p className="text-gray-500 text-center">No tasks available.</p>
+        ) : (
+          <div className="space-y-4">
+            {tasks.map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                onComplete={handleComplete}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

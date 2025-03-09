@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import TaskList from "./TaskList";
 import Notifications from "./Notifications";
-import Sidebar from "./Sidebar";
+import { useAuth } from "../../context/AuthContext";
 //import axios from "axios";
 
 const Dashboard = () => {
+    const { user } = useAuth();
     const [taskStats, setTaskStats] = useState({ completed: 0, pending: 0, overdue: 0 });
     const [upcomingTasks, setUpcomingTasks] = useState([]);
 
@@ -21,24 +21,22 @@ const Dashboard = () => {
     // }, []);
 
     return (
-        <div className="flex">
-            <Sidebar />
-
-            <div className="dashboard-container p-6">
-                <h2 className="text-2xl font-bold mb-4">📊 Dashboard</h2>
+        <div className="flex h-screen">
+            <div className="flex-grow p-6 overflow-auto ml-60">
+                <h2 className="text-2xl font-bold mb-4">👋 Hi, {user?.username}!</h2>
 
                 <Notifications />
 
-                <div className="stats grid grid-cols-3 gap-4">
-                    <div className="stat-card-completed bg-green-100 p-4 rounded shadow">
+                <div className="grid grid-cols-3 gap-4 my-6">
+                    <div className=" bg-green-100 p-4 rounded shadow">
                         <h3 className="text-lg font-semibold">✅ Completed Tasks</h3>
                         <p className="text-xl">{taskStats.completed}</p>
                     </div>
-                    <div className="stat-card-pending bg-yellow-100 p-4 rounded shadow">
+                    <div className=" bg-yellow-100 p-4 rounded shadow">
                         <h3 className="text-lg font-semibold">⏳ Pending Tasks</h3>
                         <p className="text-xl">{taskStats.pending}</p>
                     </div>
-                    <div className="stat-card-overdue bg-red-100 p-4 rounded shadow">
+                    <div className=" bg-red-100 p-4 rounded shadow">
                         <h3 className="text-lg font-semibold">⚠️ Overdue Tasks</h3>
                         <p className="text-xl">{taskStats.overdue}</p>
                     </div>
@@ -57,9 +55,6 @@ const Dashboard = () => {
                             <p className="text-gray-500">No upcoming tasks</p>
                         )}
                     </ul>
-                </div>
-                <div className="mt-6">
-                    <TaskList />
                 </div>
             </div>
         </div>
