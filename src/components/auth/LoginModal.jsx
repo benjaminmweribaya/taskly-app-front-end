@@ -49,10 +49,13 @@ const LoginModal = ({ onClose }) => {
                 "https://taskly-app-q35u.onrender.com/login",
                 values
               );
-              localStorage.setItem("access_token", response.data.access_token);
-              localStorage.setItem("refresh_token", response.data.refresh_token);
+             
+              const { user, access_token } = response.data;
 
-              navigate("/workspace");
+              sessionStorage.setItem("user", JSON.stringify(user));
+              sessionStorage.setItem("access_token", access_token);
+
+              navigate(`/workspace/${user.workspace_id}`);
               if (onClose) onClose();
             } catch (error) {
               setErrors({ api: error.response?.data?.error || "Login failed. Please check your credentials." });
