@@ -41,8 +41,8 @@ const Signup = () => {
 
       const { user, access_token } = response.data;
 
-      sessionStorage.setItem("user", JSON.stringify(user));
-      sessionStorage.setItem("access_token", access_token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("access_token", access_token);
 
       //await axios.post("https://taskly-app-q35u.onrender.com/send-verification-email", { email: values.email });
 

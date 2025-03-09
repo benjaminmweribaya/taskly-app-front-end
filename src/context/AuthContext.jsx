@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const token = sessionStorage.getItem("access_token");
+        const token = localStorage.getItem("access_token");
         if (!token) throw new Error("No token available");
 
         const response = await axios.get("/session", {
@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
   const register = async (userData) => {
     try {
       const response = await axios.post("/register", userData, { withCredentials: true });
-      sessionStorage.setItem("access_token", response.data.access_token);
+      localStorage.setItem("access_token", response.data.access_token);
       setUser(response.data.user);
       navigate(`/workspace/${response.data.user.workspace_id}`);
       return { success: true };
@@ -44,7 +44,7 @@ export function AuthProvider({ children }) {
   const login = async (credentials) => {
     try {
       const response = await axios.post("/login", credentials, { withCredentials: true });
-      sessionStorage.setItem("access_token", response.data.access_token);
+      localStorage.setItem("access_token", response.data.access_token);
       setUser(response.data.user);
       navigate(`/workspace/${response.data.user.workspace_id}`);
       return { success: true };
@@ -57,7 +57,7 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     try {
       await axios.post("/logout", {}, { withCredentials: true });
-      sessionStorage.removeItem("access_token");
+      localStorage.removeItem("access_token");
       setUser(null);
       navigate("/login");
     } catch (error) {
