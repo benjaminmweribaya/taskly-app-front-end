@@ -5,6 +5,7 @@ const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
+    // Listen for real-time notifications
     socket.on("new_notification", (notification) => {
       setNotifications((prev) => [notification, ...prev]);
     });
