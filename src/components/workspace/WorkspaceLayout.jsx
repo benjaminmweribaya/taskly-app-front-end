@@ -20,22 +20,22 @@ const WorkspaceLayout = () => {
   }
 
   //useEffect(() => {
-    //if (!socket.connected) {
-      //socket.auth = { token: sessionStorage.getItem("access_token") }; 
-      //socket.connect();
-    //}
+  //if (!socket.connected) {
+  //socket.auth = { token: sessionStorage.getItem("access_token") }; 
+  //socket.connect();
+  //}
 
-    //socket.on("connect", () => {
-      //console.log("Connected to WebSocket");
-    //});
+  //socket.on("connect", () => {
+  //console.log("Connected to WebSocket");
+  //});
 
-    //socket.on("disconnect", () => {
-      //console.warn("Disconnected from WebSocket");
-    //});
+  //socket.on("disconnect", () => {
+  //console.warn("Disconnected from WebSocket");
+  //});
 
-    //return () => {
-      //socket.disconnect();
-    //};
+  //return () => {
+  //socket.disconnect();
+  //};
   //}, []);
 
   return (
@@ -43,7 +43,8 @@ const WorkspaceLayout = () => {
       <Sidebar />
       <div className="flex-1 p-4 overflow-auto">
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<Navigate to="/workspace/dashboard" />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/tasks-list" element={<TaskList />} />
           <Route path="/task/:taskId" element={<TaskDetails />} />
           <Route path="/task/:taskId/comments" element={<TaskComments />} />
@@ -51,6 +52,7 @@ const WorkspaceLayout = () => {
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="*" element={<Navigate to="/workspace/dashboard" />} />
         </Routes>
       </div>
     </div>

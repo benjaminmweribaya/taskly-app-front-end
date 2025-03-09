@@ -57,28 +57,28 @@ const Sidebar = () => {
                 </div>
                 <nav className="flex flex-col p-4 space-y-4">
                     <Link
-                        to="/dashboard"
+                        to="/workspace/dashboard"
                         className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
                     >
                         <FaHome /> <span>Dashboard</span>
                     </Link>
                     <Link
-                        to="/tasks-list"
+                        to="/workspace/tasks-list"
                         className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
                     >
                         <FaTasks /> <span>Task Lists</span>
                     </Link>
                     <Link
-                        to="/create-task"
+                        to="/workspace/create-task"
                         className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
                     >
                         <FaPlus /> <span>Create Task</span>
                     </Link>
-                    <Link to="/profile" className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700">
+                    <Link to="/workspace/profile" className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700">
                         <FaUser /> <span>Profile</span>
                     </Link>
                     <Link
-                        to="/settings"
+                        to="/workspace/settings"
                         className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
                     >
                         <FaCog /> <span>Settings</span>
