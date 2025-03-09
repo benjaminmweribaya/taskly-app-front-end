@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Menu, X } from "lucide-react";
 import TasklyLogo from "../../assets/TasklyLogo.jpg";
@@ -8,6 +8,7 @@ const Navbar = ({ onLogin }) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <nav className="bg-white shadow-md py-12 p-4 flex justify-between items-center">
@@ -42,12 +43,16 @@ const Navbar = ({ onLogin }) => {
 
       <div className="hidden md:flex space-x-4">
         {user ? (
-          <button
-            onClick={() => navigate("/profile")}
-            className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
-          >
-            Profile
-          </button>
+          <>
+            {location.pathname === "/" && (
+              <button
+                onClick={() => navigate("/workspace")}
+                className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 font-bold"
+              >
+                My Workspace
+              </button>
+            )}
+          </>
         ) : (
           <>
             <button

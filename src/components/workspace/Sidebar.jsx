@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaHome, FaTasks, FaUser, FaSignOutAlt, FaBars, FaTimes , FaPlus, FaCog} from "react-icons/fa";
+import { FaHome, FaTasks, FaUser, FaSignOutAlt, FaBars, FaTimes, FaPlus, FaCog } from "react-icons/fa";
+import LoginModal from "../auth/LoginModal";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
     const navigate = useNavigate();
 
     const handleLogout = async () => {
         const token = localStorage.getItem("access_token");
         if (!token) {
             alert("You are already logged out!");
-            navigate("/login");
+            setShowLoginModal(true);
+            navigate("/");
             return;
         }
 
@@ -26,10 +29,13 @@ const Sidebar = () => {
             const data = await response.json();
 
             if (response.ok) {
-                localStorage.removeItem("access_token");  
+                localStorage.removeItem("access_token");
                 localStorage.removeItem("refresh_token");
+
                 alert("Logged out successfully!");
-                navigate("/login");
+
+                navigate("/");
+                setShowLoginModal(true);
             } else {
                 alert(data.error || "Logout failed!");
             }
@@ -101,6 +107,8 @@ const Sidebar = () => {
                     onClick={() => setIsOpen(false)}
                 ></div>
             )}
+
+            {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
         </div>
     );
 };
