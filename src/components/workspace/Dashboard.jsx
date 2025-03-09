@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import TaskList from "./TaskList";
 import Notifications from "./Notifications";
 import Sidebar from "./Sidebar";
-import axios from "axios";
+//import axios from "axios";
 
 const Dashboard = () => {
     const [taskStats, setTaskStats] = useState({ completed: 0, pending: 0, overdue: 0 });

@@ -3,7 +3,6 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import TaskForm from "./TaskForm";
 
 const TaskBoard = ({ tasks, setTasks, onDelete, onEdit }) => {
-    // Function to handle adding new tasks
     const handleAddTask = (newTask) => {
         setTasks([...tasks, { ...newTask, id: tasks.length + 1 }]);
     };

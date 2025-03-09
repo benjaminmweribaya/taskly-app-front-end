@@ -13,7 +13,7 @@ const TaskComments = ({ taskId }) => {
     const newCommentObj = {
       id: comments.length + 1,
       text: newComment,
-      author: "You" // Replace with actual user later
+      author: "You" 
     };
 
     setComments([...comments, newCommentObj]);

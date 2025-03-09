@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import { socket } from "../../socket";
+//import { socket } from "../../socket";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
 
-  useEffect(() => {
-    socket.on("new_notification", (notification) => {
-      setNotifications((prev) => [notification, ...prev]);
-    });
+  //useEffect(() => {
+    //socket.on("new_notification", (notification) => {
+      //setNotifications((prev) => [notification, ...prev]);
+    //});
 
-    return () => {
-      socket.off("new_notification");
-    };
-  }, []);
+    //return () => {
+      //socket.off("new_notification");
+    //};
+  //}, []);
 
   return (
     <div className="absolute top-4 right-4 w-80 bg-white shadow-lg p-4 rounded-lg">

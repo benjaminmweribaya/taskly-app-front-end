@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import TaskItem from "./TaskItem";
 
 const TaskList = () => {
-  // Dummy data (to be replaced with API fetch)
   const [tasks, setTasks] = useState([
     { id: 1, title: "Fix bug in login", priority: "High", assignedTo: "John", dueDate: "2025-02-27" },
     { id: 2, title: "Design landing page", priority: "Medium", assignedTo: "Alice", dueDate: "2025-03-01" },

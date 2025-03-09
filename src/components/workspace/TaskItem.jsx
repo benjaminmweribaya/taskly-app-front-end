@@ -10,9 +10,8 @@ const TaskItem = ({ task, onComplete, onEdit, onDelete }) => {
         onComplete(task.id);
     };
 
-    // Fallback avatar (uses UI Avatars if no image is provided)
     const getAvatarUrl = (user) => {
-        if (user?.avatar) return user.avatar; // Use provided avatar
+        if (user?.avatar) return user.avatar; 
         return `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "User")}&background=random&color=fff&size=50`;
     };
 
