@@ -1,46 +1,105 @@
 import React, { useState } from "react";
-import TaskItem from "./TaskItem";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import TaskBoard from "./TaskBoard";
+import TaskForm from "./TaskForm";
 
 const TaskList = () => {
-  const [tasks, setTasks] = useState([
-    { id: 1, title: "Fix bug in login", priority: "High", assignedTo: "John", dueDate: "2025-02-27" },
-    { id: 2, title: "Design landing page", priority: "Medium", assignedTo: "Alice", dueDate: "2025-03-01" },
-    { id: 3, title: "Update backend API", priority: "Low", assignedTo: "Bob", dueDate: "2025-03-03" },
-  ]);
+  const [taskLists, setTaskLists] = useState({
+    backlog: [
+      { id: "1", title: "Fix login bug", description: "Investigate and resolve the login issue.", assignedTo: "John", priority: "High", dueDate: "2025-02-27" },
+    ],
+    todo: [
+      { id: "2", title: "Design homepage", description: "Create UI for the landing page.", assignedTo: "Alice", priority: "Medium", dueDate: "2025-03-01" },
+    ],
+    doing: [],
+    codeReview: [],
+    testing: [],
+    done: [],
+  });
 
-  const handleComplete = (taskId) => {
-    setTasks(tasks.map(task => task.id === taskId ? { ...task, completed: true } : task));
+  const [showTaskForm, setShowTaskForm] = useState(null);
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const { source, destination } = result;
+
+    const sourceList = taskLists[source.droppableId];
+    const destList = taskLists[destination.droppableId];
+
+    const [movedTask] = sourceList.splice(source.index, 1);
+    destList.splice(destination.index, 0, movedTask);
+
+    setTaskLists({
+      ...taskLists,
+      [source.droppableId]: sourceList,
+      [destination.droppableId]: destList,
+    });
   };
 
-  const handleEdit = (task) => {
-    console.log("Edit Task:", task);
-  };
 
-  const handleDelete = (taskId) => {
-    setTasks(tasks.filter(task => task.id !== taskId));
+  const addTask = (listId, newTask) => {
+    setTaskLists({
+      ...taskLists,
+      [listId]: [...taskLists[listId], { ...newTask, id: Date.now().toString() }],
+    });
+
+    setShowTaskForm(null);
   };
 
   return (
-    <div className="flex-1 p-6 ml-60 md:ml-56 lg:ml-72 transition-all">
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-xl font-bold text-gray-700 mb-6 flex items-center">📋 Task Lists</h2>
-        {tasks.length === 0 ? (
-          <p className="text-gray-500 text-center">No tasks available.</p>
-        ) : (
-          <div className="space-y-4">
-            {tasks.map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                onComplete={handleComplete}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-            ))}
-          </div>
-        )}
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <div className="flex space-x-4 p-6 overflow-x-auto h-screen bg-gray-100 ml-[260px]">
+
+        {Object.keys(taskLists).map((listId) => (
+          <Droppable key={listId} droppableId={listId}>
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className="w-72 bg-blue-100 p-4 rounded-lg shadow-lg flex flex-col h-[80vh] min-w-[280px] max-w-[300px]"
+              >
+                <h3 className="text-lg font-bold capitalize text-gray-700 pb-2 border-b border-gray-300">{listId.replace(/([A-Z])/g, ' $1')}</h3>
+
+                <div className="flex-1 overflow-y-auto mt-2 space-y-3">
+                  {taskLists[listId].map((task, index) => (
+                    <Draggable key={task.id} draggableId={task.id} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="bg-white p-3 rounded-lg shadowborder-l-4 my-2 cursor-pointer"
+                        >
+                          <TaskBoard task={task} />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+
+                  {provided.placeholder}
+                </div>
+
+                 <div className="mt-auto flex justify-center">
+                  <button
+                    onClick={() => setShowTaskForm(listId)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                  >
+                    + Add Task
+                  </button>
+                </div>
+
+                {showTaskForm === listId && (
+                  <div className="mt-2 p-3 bg-white rounded-lg shadow-md">
+                    <TaskForm onSubmit={(task) => addTask(listId, task)} />
+                  </div>
+                )}
+              </div>
+            )}
+          </Droppable>
+        ))}
       </div>
-    </div>
+    </DragDropContext>
   );
 };
 
