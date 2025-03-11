@@ -1,102 +1,36 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { TextField, Button, MenuItem, FormControl, InputLabel, Select, Typography, Paper, Box, } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useEffect } from "react";
 
-const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
-  const [error, setError] = useState(null);
-  const [users, setUsers] = useState([]);
-
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(
-          "https://taskly-app-q35u.onrender.com/users",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setUsers(response.data.users);
-      } catch (err) {
-        console.error("Error fetching users:", err);
-        setError("Failed to fetch users");
-      }
-    };
-
-    fetchUsers();
-  }, [token]);
-
+const TaskForm = ({ onSubmit, task, onClose }) => {
   const validationSchema = Yup.object({
     title: Yup.string().required("Title is required"),
-    description: Yup.string(),
+    description: Yup.string("Description is required"),
     dueDate: Yup.date().required("Due date is required"),
-    priority: Yup.string()
-      .oneOf(["low", "medium", "high"], "Invalid priority")
-      .required("Priority is required"),
+    priority: Yup.string().oneOf(["low", "medium", "high"], "Invalid priority").required(),
     assignee: Yup.string().required("Assignee is required"),
   });
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    setError(null);
-    try {
-      const taskResponse = await axios.post(
-        "https://taskly-app-q35u.onrender.com/tasks",
-        {
-          title: values.title,
-          description: values.description,
-          due_date: values.dueDate,
-          priority: values.priority,
-          tasklist_id: tasklistId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (taskResponse.status === 201) {
-        const taskId = taskResponse.data.id;
-
-        await axios.post(
-          `https://taskly-app-q35u.onrender.com/tasks/${taskId}/assign`,
-          { user_ids: [values.assignee] },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        onTaskAdded(taskResponse.data);
-        resetForm();
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (event.target.id === "modal-overlay") {
+        onClose();
       }
-    } catch (err) {
-      console.error("Error adding task:", err);
-      setError(err.response?.data?.error || "Failed to add task");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    };
+
+    window.addEventListener("click", handleOutsideClick);
+    return () => window.removeEventListener("click", handleOutsideClick);
+  }, [onClose]);
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-      bgcolor="#f4f6f8"
-      p={3}
-    >
-      <Paper elevation={3} sx={{ width: "100%", maxWidth: 500, p: 4, borderRadius: 2 }}>
-        <Typography variant="h5" align="center" fontWeight="bold" color="primary" gutterBottom>
+    <div id="modal-overlay" className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+   
+
+      <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+      <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={onClose}>X</button>
+      <h2 className="text-2xl font-bold text-gray-700 mb-4 text-center">
           {task ? "Update Task" : "Add Task"}
-        </Typography>
+        </h2>
 
         <Formik
           initialValues={{
@@ -107,114 +41,156 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
             assignee: task?.assignee || "",
           }}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          onSubmit={onSubmit}
         >
-          {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
-            <Form onSubmit={handleSubmit}>
-              <Box mb={2}>
-                <TextField
-                  fullWidth
-                  label="Title"
+          {({ isSubmitting }) => (
+            <Form className="space-y-4">
+              <div>
+                <label className="block text-gray-700">Title</label>
+                <Field
+                  type="text"
                   name="title"
-                  value={values.title}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  variant="outlined"
-                  error={Boolean(values.title && validationSchema.fields.title.validateSync(values.title))}
-                  helperText={<ErrorMessage name="title" />}
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                 />
-              </Box>
+                <ErrorMessage name="title" component="p" className="text-red-500 text-sm" />
+              </div>
 
-              <Box mb={2}>
-                <TextField
-                  fullWidth
-                  label="Description"
+              <div>
+                <label className="block text-gray-700">Description</label>
+                <Field
+                  as="textarea"
                   name="description"
-                  value={values.description}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  variant="outlined"
-                  multiline
-                  rows={3}
-                  error={Boolean(values.description && validationSchema.fields.description.validateSync(values.description))}
-                  helperText={<ErrorMessage name="description" />}
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                 />
-              </Box>
+                <ErrorMessage name="description" component="p" className="text-red-500 text-sm" />
+              </div>
 
-              <Box mb={2}>
-                <TextField
-                  fullWidth
-                  label="Due Date"
-                  name="dueDate"
+              <div>
+                <label className="block text-gray-700">Due Date</label>
+                <Field
                   type="date"
-                  value={values.dueDate}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  variant="outlined"
-                  InputLabelProps={{ shrink: true }}
-                  error={Boolean(values.dueDate && validationSchema.fields.dueDate.validateSync(values.dueDate))}
-                  helperText={<ErrorMessage name="dueDate" />}
+                  name="dueDate"
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                 />
-              </Box>
+                <ErrorMessage name="dueDate" component="p" className="text-red-500 text-sm" />
+              </div>
 
-              <Box mb={2}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel>Priority</InputLabel>
-                  <Select
-                    name="priority"
-                    value={values.priority}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    label="Priority"
-                  >
-                    <MenuItem value="low">Low</MenuItem>
-                    <MenuItem value="medium">Medium</MenuItem>
-                    <MenuItem value="high">High</MenuItem>
-                  </Select>
-                  <Typography variant="caption" color="error">
-                    <ErrorMessage name="priority" />
-                  </Typography>
-                </FormControl>
-              </Box>
+              <div>
+                <label className="block text-gray-700">Priority</label>
+                <Field
+                  as="select"
+                  name="priority"
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </Field>
+                <ErrorMessage name="priority" component="p" className="text-red-500 text-sm" />
+              </div>
 
-              <Box mb={3}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel>Assignee</InputLabel>
-                  <Select
-                    name="assignee"
-                    value={values.assignee}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    label="Assignee"
-                  >
-                    {users.map((user) => (
-                      <MenuItem key={user.id} value={user.id}>
-                        {user.username} ({user.email})
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  <Typography variant="caption" color="error">
-                    <ErrorMessage name="assignee" />
-                  </Typography>
-                </FormControl>
-              </Box>
+              <div>
+                <label className="block text-gray-700">Assignee</label>
+                <Field
+                  type="text"
+                  name="assignee"
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <ErrorMessage name="assignee" component="p" className="text-red-500 text-sm" />
+              </div>
 
-              <LoadingButton
+              <button
                 type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                loading={isSubmitting}
+                className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-all"
+                disabled={isSubmitting}
               >
-                {task ? "Update Task" : "Add Task"}
-              </LoadingButton>
+                {isSubmitting ? "Processing..." : task ? "Update Task" : "Add Task"}
+              </button>
             </Form>
           )}
         </Formik>
-      </Paper>
-    </Box>
+      </div>
+    </div>
   );
 };
 
 export default TaskForm;
+
+
+
+
+
+
+   
+
+//   return (
+//     <div id="modal-overlay" className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+//       <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+//         <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={onClose}>X</button>
+//         <h2 className="text-2xl font-bold text-gray-700 mb-4 text-center">
+//           {task ? "Update Task" : "Add Task"}
+//         </h2>
+
+//         <Formik
+//           initialValues={{
+//             title: task?.title || "",
+//             description: task?.description || "",
+//             dueDate: task?.dueDate || "",
+//             priority: task?.priority || "low",
+//             assignee: task?.assignee || "",
+//           }}
+//           validationSchema={validationSchema}
+//           onSubmit={onSubmit}
+//         >
+//           {({ isSubmitting }) => (
+//             <Form className="space-y-4">
+//               <div>
+//                 <label className="block text-gray-700">Title</label>
+//                 <Field type="text" name="title" className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" />
+//                 <ErrorMessage name="title" component="p" className="text-red-500 text-sm" />
+//               </div>
+
+//               <div>
+//                 <label className="block text-gray-700">Description</label>
+//                 <Field as="textarea" name="description" className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" />
+//                 <ErrorMessage name="description" component="p" className="text-red-500 text-sm" />
+//               </div>
+
+//               <div>
+//                 <label className="block text-gray-700">Due Date</label>
+//                 <Field type="date" name="dueDate" className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" />
+//                 <ErrorMessage name="dueDate" component="p" className="text-red-500 text-sm" />
+//               </div>
+
+//               <div>
+//                 <label className="block text-gray-700">Priority</label>
+//                 <Field as="select" name="priority" className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+//                   <option value="low">Low</option>
+//                   <option value="medium">Medium</option>
+//                   <option value="high">High</option>
+//                 </Field>
+//                 <ErrorMessage name="priority" component="p" className="text-red-500 text-sm" />
+//               </div>
+
+//               <div>
+//                 <label className="block text-gray-700">Assignee</label>
+//                 <Field type="text" name="assignee" className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" />
+//                 <ErrorMessage name="assignee" component="p" className="text-red-500 text-sm" />
+//               </div>
+
+//               <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-all" disabled={isSubmitting}>
+//                 {isSubmitting ? "Processing..." : task ? "Update Task" : "Add Task"}
+//               </button>
+//             </Form>
+//           )}
+//         </Formik>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TaskForm;
+
+
+
 

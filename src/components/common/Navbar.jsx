@@ -13,12 +13,19 @@ const Navbar = ({ onLogin }) => {
   return (
     <nav className="bg-white shadow-md py-12 p-4 flex justify-between items-center">
 
+      {/* Clickable and Enlarged Taskly Logo (No Shadow) */}
       <div className="flex items-center">
-        <img src={TasklyLogo} alt="Taskly Logo" className="h-14 w-auto" />
-        <span className="ml-2 text-xl font-bold text-gray-800">Taskly</span>
+        <Link to="/">
+          <img
+            src={TasklyLogo}
+            alt="Taskly Logo"
+            className="h-16 w-auto brightness-110 transition-transform transform hover:scale-105"
+          />
+        </Link>
+        <span className="ml-2 text-xl font-bold text-gray-800"></span>
       </div>
 
-      <ul className={`md:flex hidden space-x-6 text-gray-700`}>
+      <ul className="md:flex hidden space-x-6 text-gray-700">
         <li><Link to="/" className="hover:text-blue-600">Home</Link></li>
         <li><Link to="/about" className="hover:text-blue-600">About Us</Link></li>
         <li><Link to="/contact" className="hover:text-blue-600">Contact Us</Link></li>
