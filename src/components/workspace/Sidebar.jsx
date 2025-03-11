@@ -74,64 +74,14 @@ const Sidebar = () => {
   const navigationLinks = [
     { name: "Dashboard", icon: <HomeIcon />, path: "/workspace/dashboard" },
     { name: "Task Lists", icon: <TasksIcon />, path: "/workspace/tasks-list" },
+    { name: "Shareboard", icon: <TasksIcon />, path: "/workspace/shareboard" },
     { name: "Profile", icon: <ProfileIcon />, path: "/workspace/profile" },
     { name: "Settings", icon: <SettingsIcon />, path: "/workspace/settings" },
     { name: "Home", icon: <HomeIcon />, path: "/" },
   ];
 
-            <div
-                className={`fixed inset-y-0 left-0 w-64 bg-gray-900 text-white transform ${isOpen ? "translate-x-0" : "-translate-x-full"
-                    } md:translate-x-0 transition-transform duration-300 ease-in-out z-40`}
-            >
-                <div className="p-4 text-xl font-bold border-b border-gray-700">
-                    Taskly App
-                </div>
-                <nav className="flex flex-col p-4 space-y-4">
-                    <Link
-                        to="/workspace/dashboard"
-                        className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
-                    >
-                        <FaHome /> <span>Dashboard</span>
-                    </Link>
-                    <Link
-                        to="/workspace/tasks-list"
-                        className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
-                    >
-                        <FaTasks /> <span>Task Lists</span>
-                    </Link>
-                    <Link
-                        to="/workspace/create-task"
-                        className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
-                    >
-                        <FaPlus /> <span>Create Task</span>
-                    </Link>
-                    <Link
-                        to="/workspace/shareboard"
-                        className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
-                    >
-                        <FaPlus /> <span>Shareboard</span>
-                    </Link>
-                    <Link to="/workspace/profile" className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700">
-                        <FaUser /> <span>Profile</span>
-                    </Link>
-                    <Link
-                        to="/workspace/settings"
-                        className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
-                    >
-                        <FaCog /> <span>Settings</span>
-                    </Link>
-                    <Link
-                        to="/"
-                        className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
-                    >
-                        <FaHome /> <span>Home</span>
-                    </Link>
-                    <button onClick={handleLogout} className="flex items-center space-x-2 p-2 rounded hover:bg-red-600">
-                        <FaSignOutAlt /> <span>Logout</span>
-                    </button>
-                </nav>
-            </div>
-
+    return (
+        <>
       {/* Sidebar for Large Screens */}
       {isLargeScreen ? (
         <Box
