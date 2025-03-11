@@ -80,6 +80,12 @@ const Sidebar = () => {
                     >
                         <FaPlus /> <span>Create Task</span>
                     </Link>
+                    <Link
+                        to="/workspace/shareboard"
+                        className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700"
+                    >
+                        <FaPlus /> <span>Shareboard</span>
+                    </Link>
                     <Link to="/workspace/profile" className="flex items-center space-x-2 p-2 rounded hover:bg-blue-700">
                         <FaUser /> <span>Profile</span>
                     </Link>
