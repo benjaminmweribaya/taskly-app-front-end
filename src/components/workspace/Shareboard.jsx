@@ -92,7 +92,7 @@ fetchMembers();
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 6, p: 3 }}>
+    <Container maxWidth="md" sx={{ mt: 6, p: 3, ml: { xs: 0, md: "240px" }, transition: "margin 0.3s ease-in-out" }}>
       <Typography variant="h5" gutterBottom>
         Share Board
       </Typography>

@@ -22,6 +22,8 @@ import {
   ExitToApp as LogoutIcon,
   Menu as MenuIcon,
   Close as CloseIcon,
+  Dashboard as DashboardIcon,
+  Share as ShareIcon,
 } from "@mui/icons-material";
 import LoginModal from "../auth/LoginModal";
 import { useTheme } from "@mui/system";
@@ -72,9 +74,9 @@ const Sidebar = () => {
   };
 
   const navigationLinks = [
-    { name: "Dashboard", icon: <HomeIcon />, path: "/workspace/dashboard" },
+    { name: "Dashboard", icon: <DashboardIcon />, path: "/workspace/dashboard" },
     { name: "Task Lists", icon: <TasksIcon />, path: "/workspace/tasks-list" },
-    { name: "Shareboard", icon: <TasksIcon />, path: "/workspace/shareboard" },
+    { name: "Shareboard", icon: <ShareIcon />, path: "/workspace/shareboard" },
     { name: "Profile", icon: <ProfileIcon />, path: "/workspace/profile" },
     { name: "Settings", icon: <SettingsIcon />, path: "/workspace/settings" },
     { name: "Home", icon: <HomeIcon />, path: "/" },
