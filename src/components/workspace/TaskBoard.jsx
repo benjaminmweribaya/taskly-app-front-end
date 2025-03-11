@@ -1,56 +1,74 @@
 import React, { useState } from "react";
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    TextField,
+    Button,
+    Typography,
+    List,
+    ListItem,
+    ListItemText
+} from "@mui/material";
 
 const TaskBoard = ({ task }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState("");
 
-    const addComment = (comment) => {
-        setComments([...comments, comment]);
+    const handleAddComment = () => {
+        if (newComment.trim() !== "") {
+            setComments([...comments, newComment]);
+            setNewComment("");
+        }
     };
 
     return (
         <div>
-            <div onClick={() => setIsExpanded(true)} className="cursor-pointer">
-                <h3 className="font-bold">{task.title}</h3>
-                <p className="text-sm text-gray-500">{task.assignedTo}</p>
+            {/* Clickable Task Summary */}
+            <div onClick={() => setIsExpanded(true)} className="cursor-pointer p-4 bg-white shadow rounded-lg">
+                <Typography variant="h6" fontWeight="bold">{task.title}</Typography>
+                <Typography variant="body2" color="textSecondary">Assigned to: {task.assignedTo}</Typography>
             </div>
 
-            {isExpanded && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg w-1/2">
-                        <h2 className="text-lg font-bold">{task.title}</h2>
-                        <p className="text-gray-600">{task.description}</p>
-                        <p className="text-gray-500 text-sm">Assigned to: {task.assignedTo}</p>
-                        <p className="text-gray-500 text-sm">Priority: {task.priority}</p>
-                        <p className="text-gray-500 text-sm">Due Date: {task.dueDate}</p>
+            {/* Task Details Pop-up */}
+            <Dialog open={isExpanded} onClose={() => setIsExpanded(false)} fullWidth maxWidth="sm">
+                <DialogTitle>{task.title}</DialogTitle>
+                <DialogContent>
+                    <Typography variant="body1" paragraph>{task.description}</Typography>
+                    <Typography variant="body2" color="textSecondary">Assigned to: {task.assignedTo}</Typography>
+                    <Typography variant="body2" color="textSecondary">Priority: {task.priority}</Typography>
+                    <Typography variant="body2" color="textSecondary">Due Date: {task.dueDate}</Typography>
 
-                        <div className="mt-4">
-                            <h3 className="font-bold">Comments</h3>
-                            <ul>
-                                {comments.map((comment, index) => (
-                                    <li key={index} className="border-b py-1">{comment}</li>
-                                ))}
-                            </ul>
+                    {/* Comments Section */}
+                    <Typography variant="h6" className="mt-4">Comments</Typography>
+                    <List>
+                        {comments.map((comment, index) => (
+                            <ListItem key={index} divider>
+                                <ListItemText primary={comment} />
+                            </ListItem>
+                        ))}
+                    </List>
 
-                            <input
-                                type="text"
-                                className="border rounded p-2 w-full mt-2"
-                                placeholder="Add a comment..."
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter" && e.target.value.trim() !== "") {
-                                        addComment(e.target.value);
-                                        e.target.value = "";
-                                    }
-                                }}
-                            />
-                        </div>
+                    {/* Add Comment Input */}
+                    <TextField
+                        label="Add a comment"
+                        fullWidth
+                        variant="outlined"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        onKeyPress={(e) => e.key === "Enter" && handleAddComment()}
+                        className="mt-2"
+                    />
+                </DialogContent>
 
-                        <button onClick={() => setIsExpanded(false)} className="mt-4 bg-gray-300 px-4 py-2 rounded">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            )}
+                {/* Actions */}
+                <DialogActions>
+                    <Button onClick={() => setIsExpanded(false)} color="secondary">Close</Button>
+                    <Button onClick={handleAddComment} color="primary" variant="contained">Add Comment</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
