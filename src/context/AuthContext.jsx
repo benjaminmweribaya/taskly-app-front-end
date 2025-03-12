@@ -31,7 +31,7 @@ export function AuthProvider({ children }) {
 
   const register = async (userData) => {
     try {
-      const response = await axios.post("/register", userData, { withCredentials: true });
+      const response = await axios.post("/register/", userData, { withCredentials: true });
       localStorage.setItem("access_token", response.data.access_token);
       setUser(response.data.user);
       navigate(`/workspace/${response.data.user.workspace_id}`);
@@ -43,7 +43,7 @@ export function AuthProvider({ children }) {
 
   const login = async (credentials) => {
     try {
-      const response = await axios.post("/login", credentials, { withCredentials: true });
+      const response = await axios.post("/login/", credentials, { withCredentials: true });
       localStorage.setItem("access_token", response.data.access_token);
       setUser(response.data.user);
       navigate(`/workspace/${response.data.user.workspace_id}`);
@@ -56,7 +56,7 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await axios.delete("/logout", {}, { withCredentials: true });
+      await axios.delete("/logout/", {}, { withCredentials: true });
       localStorage.removeItem("access_token");
       setUser(null);
       navigate("/login");
