@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -8,6 +8,7 @@ import LoginModal from "./LoginModal";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [redirect, setRedirect] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -46,16 +47,21 @@ const Signup = () => {
 
       //await axios.post("https://taskly-app-q35u.onrender.com/send-verification-email", { email: values.email });
 
-      navigate(`/workspace/${user.workspace_id}`);
-
+      setRedirect(true);
     } catch (error) {
       if (error.response) {
         setErrors({ api: error.response.data.error || "Signup failed. Please try again." });
       }
     }
     setSubmitting(false);
-
   };
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (redirect && user?.workspace_id) {
+      navigate(`/workspace/${user.workspace_id}`);
+    }
+  }, [redirect, navigate]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
