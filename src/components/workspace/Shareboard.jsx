@@ -35,39 +35,45 @@ const Shareboard = () => {
   useEffect(() => {
     if (!workspace_id) return;
 
-const fetchMembers = async () => {
-  try {
-    setLoading(true);
-    const res = await api.get(`/workspace/${workspace_id}/members`);
-    setBoardMembers(res.data.members);
-    setPendingInvites(res.data.pending_invites);
-  } catch (err) {
-    console.error("Fetch Members Error:", err);
-    setError(err.response?.data?.error || "Failed to fetch members");
-  } finally {
-    setLoading(false);
-  }
-};
+    const fetchMembers = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get(`/workspace/${workspace_id}/members`);
+        setBoardMembers(res.data.members);
+        setPendingInvites(res.data.pending_invites);
+      } catch (err) {
+        console.error("Fetch Members Error:", err);
+        setError(err.response?.data?.error || "Failed to fetch members");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-fetchMembers();
+    fetchMembers();
   }, [workspace_id]);
 
   const handleInvite = async (values, { resetForm, setSubmitting }) => {
+    if (pendingInvites.some(invite => invite.email === values.email)) {
+      setError("Invite already sent to this email");
+      setSubmitting(false);
+      return;
+    }
+    
     try {
       setError(null);
       setLoading(true);
 
-  const res = await api.post("/invite", { email: values.email, workspace_id });
+      const res = await api.post("/invite", { email: values.email, workspace_id });
 
-  setPendingInvites([...pendingInvites, { email: values.email, status: "pending", invited_by: "You" }]);
-  resetForm();
-} catch (err) {
-  console.error("Invite Error:", err);
-  setError(err.response?.data?.error || "Failed to send invite");
-} finally {
-  setLoading(false);
-  setSubmitting(false);
-}
+      setPendingInvites([...pendingInvites, { email: values.email, status: "pending", invited_by: "You" }]);
+      resetForm();
+    } catch (err) {
+      console.error("Invite Error:", err);
+      setError(err.response?.data?.error || "Failed to send invite");
+    } finally {
+      setLoading(false);
+      setSubmitting(false);
+    }
   };
 
   const generateInviteLink = async () => {
@@ -75,15 +81,15 @@ fetchMembers();
       setError(null);
       const res = await api.post("/invite/generate-link", { workspace_id });
 
-  if (res.status === 200) {
-    setInviteLink(res.data.link);
-  } else {
-    throw new Error("Failed to generate link");
-  }
-} catch (err) {
-  console.error("Generate Link Error:", err);
-  setError(err.response?.data?.error || "Error generating link");
-}
+      if (res.status === 200) {
+        setInviteLink(res.data.link);
+      } else {
+        throw new Error("Failed to generate link");
+      }
+    } catch (err) {
+      console.error("Generate Link Error:", err);
+      setError(err.response?.data?.error || "Error generating link");
+    }
   };
 
   const copyToClipboard = () => {
@@ -97,112 +103,112 @@ fetchMembers();
         Share Board
       </Typography>
 
-  {error && <Alert severity="error">{error}</Alert>}
+      {error && <Alert severity="error">{error}</Alert>}
 
-  {/* Invite Form */}
-  <Formik
-    initialValues={{ email: "" }}
-    validationSchema={Yup.object({ email: Yup.string().email("Invalid email").required("Email is required") })}
-    onSubmit={handleInvite}
-  >
-    {({ isSubmitting, handleChange, values }) => (
-      <Form>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={9}>
-            <TextField
-              type="email"
-              name="email"
-              label="Enter email address"
-              variant="outlined"
-              fullWidth
-              value={values.email}
-              onChange={handleChange}
-            />
-            <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
-          </Grid>
-          <Grid item xs={3}>
-            <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading || isSubmitting}>
-              {loading ? <CircularProgress size={24} /> : "Invite"}
-            </Button>
-          </Grid>
-        </Grid>
-      </Form>
-    )}
-  </Formik>
+      {/* Invite Form */}
+      <Formik
+        initialValues={{ email: "" }}
+        validationSchema={Yup.object({ email: Yup.string().email("Invalid email").required("Email is required") })}
+        onSubmit={handleInvite}
+      >
+        {({ isSubmitting, handleChange, values }) => (
+          <Form>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={9}>
+                <TextField
+                  type="email"
+                  name="email"
+                  label="Enter email address"
+                  variant="outlined"
+                  fullWidth
+                  value={values.email}
+                  onChange={handleChange}
+                />
+                <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
+              </Grid>
+              <Grid item xs={3}>
+                <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading || isSubmitting}>
+                  {loading ? <CircularProgress size={24} /> : "Invite"}
+                </Button>
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
 
-  {/* Generate and Copy Workspace Invite Link */}
-  <Grid container spacing={2} alignItems="center" sx={{ mt: 3 }}>
-    <Grid item>
-      <Button onClick={generateInviteLink} variant="contained" color="success">
-        Create Link
-      </Button>
-    </Grid>
-    {inviteLink && (
-      <>
-        <Grid item xs>
-          <TextField type="text" value={inviteLink} fullWidth InputProps={{ readOnly: true }} />
-        </Grid>
+      {/* Generate and Copy Workspace Invite Link */}
+      <Grid container spacing={2} alignItems="center" sx={{ mt: 3 }}>
         <Grid item>
-          <Button onClick={copyToClipboard} variant="contained" color="secondary">
-            Copy
+          <Button onClick={generateInviteLink} variant="contained" color="success">
+            Create Link
           </Button>
         </Grid>
-      </>
-    )}
-  </Grid>
+        {inviteLink && (
+          <>
+            <Grid item xs>
+              <TextField type="text" value={inviteLink} fullWidth InputProps={{ readOnly: true }} />
+            </Grid>
+            <Grid item>
+              <Button onClick={copyToClipboard} variant="contained" color="secondary">
+                Copy
+              </Button>
+            </Grid>
+          </>
+        )}
+      </Grid>
 
-  {/* Members and Pending Invites */}
-  <Grid container spacing={4} sx={{ mt: 4 }}>
-    {/* Board Members */}
-    <Grid item xs={12} md={6}>
-      <Card>
-        <CardContent>
-          <Typography variant="h6">Board Members</Typography>
-          {loading ? (
-            <CircularProgress />
-          ) : boardMembers.length > 0 ? (
-            <List>
-              {boardMembers.map((member) => (
-                <ListItem key={member.id} divider>
-                  <ListItemText primary={`${member.username} (${member.email})`} />
-                </ListItem>
-              ))}
-            </List>
-          ) : (
-            <Typography color="textSecondary">No members yet</Typography>
-          )}
-        </CardContent>
-      </Card>
-    </Grid>
+      {/* Members and Pending Invites */}
+      <Grid container spacing={4} sx={{ mt: 4 }}>
+        {/* Board Members */}
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Board Members</Typography>
+              {loading ? (
+                <CircularProgress />
+              ) : boardMembers.length > 0 ? (
+                <List>
+                  {boardMembers.map((member) => (
+                    <ListItem key={member.id} divider>
+                      <ListItemText primary={`${member.username} (${member.email})`} />
+                    </ListItem>
+                  ))}
+                </List>
+              ) : (
+                <Typography color="textSecondary">No members yet</Typography>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
 
-    {/* Pending Invites */}
-    <Grid item xs={12} md={6}>
-      <Card>
-        <CardContent>
-          <Typography variant="h6">Join Requests</Typography>
-          {loading ? (
-            <CircularProgress />
-          ) : pendingInvites.length > 0 ? (
-            <List>
-              {pendingInvites.map((invite, index) => (
-                <ListItem key={index} divider>
-                  <ListItemText primary={`${invite.email} - ${invite.status}`} secondary={`Invited by ${invite.invited_by}`} />
-                </ListItem>
-              ))}
-            </List>
-          ) : (
-            <Typography color="textSecondary">No pending invites</Typography>
-          )}
-        </CardContent>
-      </Card>
-    </Grid>
-  </Grid>
+        {/* Pending Invites */}
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Join Requests</Typography>
+              {loading ? (
+                <CircularProgress />
+              ) : pendingInvites.length > 0 ? (
+                <List>
+                  {pendingInvites.map((invite, index) => (
+                    <ListItem key={index} divider>
+                      <ListItemText primary={`${invite.email} - ${invite.status}`} secondary={`Invited by ${invite.invited_by}`} />
+                    </ListItem>
+                  ))}
+                </List>
+              ) : (
+                <Typography color="textSecondary">No pending invites</Typography>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
-  {/* Snackbar for Copying Invite Link */}
-  <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={() => setSnackbarOpen(false)}>
-    <Alert severity="success">Invite link copied to clipboard!</Alert>
-  </Snackbar>
-</Container>
+      {/* Snackbar for Copying Invite Link */}
+      <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={() => setSnackbarOpen(false)}>
+        <Alert severity="success">Invite link copied to clipboard!</Alert>
+      </Snackbar>
+    </Container>
   );
 };
 
