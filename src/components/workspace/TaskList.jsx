@@ -93,7 +93,7 @@ const TaskList = () => {
       [source.droppableId]: { ...prevLists[source.droppableId], tasks: sourceList },
       [destination.droppableId]: { ...prevLists[destination.droppableId], tasks: destList },
     }));
-  
+
 
     try {
       await api.put(`/tasks/${movedTask.id}`, {
@@ -102,6 +102,16 @@ const TaskList = () => {
     } catch (error) {
       console.error("Error updating task list after drag:", error);
     }
+  };
+
+  const addTask = (tasklist_id, newTask) => {
+    setTaskLists((prevLists) => ({
+      ...prevLists,
+      [tasklist_id]: {
+        ...prevLists[tasklist_id],
+        tasks: [...prevLists[tasklist_id].tasks, newTask],
+      },
+    }));
   };
 
   return (
@@ -151,7 +161,7 @@ const TaskList = () => {
                   </div>
 
                   <div className="flex-1 overflow-y-auto mt-2 space-y-3">
-                    {taskLists[tasklist_id].tasks || [].map((task, index) => (
+                    {(taskLists[tasklist_id]?.tasks || []).map((task, index) => (
                       <Draggable key={task.id} draggableId={task.id} index={index}>
                         {(provided) => (
                           <div
@@ -177,7 +187,11 @@ const TaskList = () => {
                   {openTaskForm === tasklist_id && (
                     <Modal open onClose={() => setOpenTaskForm(null)}>
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg">
-                        <TaskForm onSubmit={(task) => addTask(tasklist_id, task)} />
+                        <TaskForm
+                          onTaskAdded={(task) => addTask(tasklist_id, task)}
+                          tasklistId={tasklist_id}
+                          access_token={authToken}
+                        />
                       </div>
                     </Modal>
                   )}

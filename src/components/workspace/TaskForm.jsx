@@ -46,7 +46,13 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, access_token }) => {
         due_date: values.dueDate,
         priority: values.priority,
         tasklist_id: tasklistId,
-      });
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`, 
+        },
+      }
+    );
 
       if (taskResponse.status === 201) {
         //const taskId = taskResponse.data.id;
