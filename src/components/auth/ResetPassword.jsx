@@ -19,7 +19,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await fetch("https://taskly-app-q35u.onrender.com/reset-password", {
+      const response = await fetch("https://taskly-app-9u0e.onrender.com/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, password }),

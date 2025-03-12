@@ -34,7 +34,7 @@ const Signup = () => {
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
       const response = await axios.post(
-        "https://taskly-app-q35u.onrender.com/register",
+        "https://taskly-app-9u0e.onrender.com/register",
         values
       );
       console.log("Signup Success:", response.data);

@@ -19,7 +19,7 @@ export default function VerifyEmail() {
         }
 
         axios
-            .get(`https://taskly-app-q35u.onrender.com/verify-email/${token}`)
+            .get(`https://taskly-app-9u0e.onrender.com/verify-email/${token}`)
             .then((response) => {
                 setStatus("success");
                 setMessage(response.data.success);

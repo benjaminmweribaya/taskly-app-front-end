@@ -13,7 +13,7 @@ const ForgotPassword = () => {
     setMessage("");
     setError("");
     try {
-      const response = await axios.post("https://taskly-app-q35u.onrender.com/forgot-password", { email });
+      const response = await axios.post("https://taskly-app-9u0e.onrender.com/forgot-password", { email });
       setMessage(response.data.message);
     } catch (err) {
       setError(err.response?.data?.error || "Something went wrong");

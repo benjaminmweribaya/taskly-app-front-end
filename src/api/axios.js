@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://taskly-app-q35u.onrender.com";
+const API_BASE_URL = "https://taskly-app-9u0e.onrender.com";
 
 
 const api = axios.create({

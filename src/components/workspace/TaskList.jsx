@@ -6,14 +6,6 @@ import { Card, Typography, IconButton, Modal, TextField, Button } from "@mui/mat
 import { Delete, Edit, Add } from "@mui/icons-material";
 import api from "../../api/axios";
 
-const PREMADE_TASKLISTS = {
-  backlog: [{ id: "task-1", title: "Research project scope" }],
-  todo: [{ id: "task-2", title: "Design database schema" }],
-  doing: [{ id: "task-3", title: "Develop API endpoints" }],
-  codeReview: [{ id: "task-4", title: "Review PR #12" }],
-  testing: [{ id: "task-5", title: "Run integration tests" }],
-  done: [{ id: "task-6", title: "Deploy to production" }],
-};
 
 const TaskList = () => {
   const [taskLists, setTaskLists] = useState({});
@@ -24,21 +16,16 @@ const TaskList = () => {
 
   useEffect(() => {
     fetchTaskLists();
-  }, []);
+  }, [authToken]);
 
   const fetchTaskLists = async () => {
     try {
-      const response = await api.get("/tasklists");
-      if (response.data.length > 0) {
-        const userTaskLists = response.data.reduce((acc, taskList) => {
-          acc[taskList.id] = { name: taskList.name, tasks: taskList.tasks || [] };
-          return acc;
-        }, {});
-
-        setTaskLists({ ...PREMADE_TASKLISTS, ...userTaskLists });
-      } else {
-        setTaskLists(PREMADE_TASKLISTS);
-      }
+      const response = await api.get("/tasklists", { headers: { Authorization: `Bearer ${authToken}` } });
+      const userTaskLists = response.data.reduce((acc, taskList) => {
+        acc[taskList.id] = { name: taskList.name, tasks: taskList.tasks || [] };
+        return acc;
+      }, {});
+      setTaskLists(userTaskLists);
     } catch (error) {
       console.error("Error fetching task lists:", error);
     }
@@ -47,14 +34,8 @@ const TaskList = () => {
 
   const addTaskList = async () => {
     const taskListName = `New Task List ${Date.now()}`;
-
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/`,
-        { name: taskListName, tasks: PREMADE_TASKLISTS[taskListName] || [] },
-        { headers: { Authorization: `Bearer ${authToken}` } }
-      );
-
+      const response = await api.post("/tasklists", { name: taskListName }, { headers: { Authorization: `Bearer ${authToken}` } });
       const new_tasklist_id = response.data.id;
       setTaskLists((prevLists) => ({
         ...prevLists, [new_tasklist_id]: { name: taskListName, tasks: [] },
@@ -68,11 +49,7 @@ const TaskList = () => {
   const editTaskListName = async (tasklist_id, newTaskListName) => {
     if (!newTaskListName.trim()) return;
     try {
-      await axios.put(
-        `${API_BASE_URL}/${tasklist_id}`,
-        { name: newTaskListName },
-        { headers: { Authorization: `Bearer ${authToken}` } }
-      );
+      await api.put(`/tasklist_id/${tasklist_id}`, { name: newTaskListName }, { headers: { Authorization: `Bearer ${authToken}` } });
 
       setTaskLists((prevLists) => ({
         ...prevLists,
@@ -86,17 +63,14 @@ const TaskList = () => {
 
   const deleteTaskList = async (tasklist_id) => {
     if (!window.confirm("Are you sure you want to delete this list?")) return;
-
     try {
-      await axios.delete(`${API_BASE_URL}/${tasklist_id}`, {
-        headers: { Authorization: `Bearer ${authToken}` },
-      });
+      await api.delete(`/tasklists/${tasklist_id}`, { headers: { Authorization: `Bearer ${authToken}` } });
 
       setTaskLists((prevLists) => {
         const updatedLists = { ...prevLists };
         delete updatedLists[tasklist_id];
         return updatedLists;
-      });      
+      });
     } catch (error) {
       console.error("Error deleting task list:", error);
     }
@@ -106,20 +80,23 @@ const TaskList = () => {
     if (!result.destination) return;
 
     const { source, destination } = result;
+
     const sourceList = [...taskLists[source.droppableId].tasks];
     const destList = [...taskLists[destination.droppableId].tasks];
 
     const [movedTask] = sourceList.splice(source.index, 1);
+
     destList.splice(destination.index, 0, movedTask);
 
-    setTaskLists({
-      ...taskLists,
-      [source.droppableId]: { ...taskLists[source.droppableId], tasks: sourceList },
-      [destination.droppableId]: { ...taskLists[destination.droppableId], tasks: destList },
-    });
+    setTaskLists((prevLists) => ({
+      ...prevLists,
+      [source.droppableId]: { ...prevLists[source.droppableId], tasks: sourceList },
+      [destination.droppableId]: { ...prevLists[destination.droppableId], tasks: destList },
+    }));
+  
 
     try {
-      await axios.put(`${API_BASE_URL}/tasks/${movedTask.id}`, {
+      await api.put(`/tasks/${movedTask.id}`, {
         taskListId: destination.droppableId,
       }, { headers: { Authorization: `Bearer ${authToken}` } });
     } catch (error) {
@@ -209,7 +186,7 @@ const TaskList = () => {
             </Droppable>
           ))}
 
-          <Button variant="outlined" color="secondary" startIcon={<Add />} onClick={() => setTaskLists({ ...taskLists, [`newTaskList${Date.now()}`]: [] })}>
+          <Button variant="outlined" color="secondary" startIcon={<Add />} onClick={addTaskList}>
             Add Task List
           </Button>
         </div>
