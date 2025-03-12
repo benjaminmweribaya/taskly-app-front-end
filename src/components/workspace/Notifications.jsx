@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Bell } from "lucide-react";
+import api from "../../api/axios";
 //import { socket } from "../../socket";
 
 const Notifications = () => {
@@ -10,9 +11,6 @@ const Notifications = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
-  const API_URL = "https://taskly-app-q35u.onrender.com";
-  const token = localStorage.getItem("token");
 
 
   //useEffect(() => {
@@ -29,17 +27,8 @@ const Notifications = () => {
   const fetchNotifications = async (page = 1) => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/notifications?page=${page}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) throw new Error("Failed to fetch notifications");
-
-      const data = await res.json();
+      const res = await api.get(`/notifications?page=${page}`);
+      const data = res.data;
       setNotifications(data.notifications);
       setCurrentPage(data.current_page);
       setTotalPages(data.total_pages);
@@ -53,16 +42,7 @@ const Notifications = () => {
 
   const markAsRead = async (id) => {
     try {
-      const res = await fetch(`${API_URL}/notifications/${id}/read`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) throw new Error("Failed to mark notification as read");
-
+      await api.put(`/notifications/${id}/read`);
       setNotifications((prev) =>
         prev.map((notif) =>
           notif.id === id ? { ...notif, is_read: true } : notif
@@ -76,16 +56,7 @@ const Notifications = () => {
 
   const markAllAsRead = async () => {
     try {
-      const res = await fetch(`${API_URL}/notifications/read-all`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) throw new Error("Failed to mark all as read");
-
+      await api.patch(`/notifications/read-all`);
       setNotifications((prev) =>
         prev.map((notif) => ({ ...notif, is_read: true }))
       );
@@ -97,18 +68,8 @@ const Notifications = () => {
 
   const deleteNotification = async (id) => {
     setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-
     try {
-      const res = await fetch(`${API_URL}/notifications/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) throw new Error("Failed to delete notification");
-
+      await api.delete(`/notifications/${id}`);
     } catch (err) {
       console.error("Error deleting notification:", err);
     }
@@ -119,23 +80,10 @@ const Notifications = () => {
       const newState = !notificationsEnabled;
       setNotificationsEnabled(newState);
 
-      const res = await fetch(`${API_URL}/notifications/settings`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ enable_notifications: newState }),
+      const res = await api.patch(`/notifications/settings`, {
+        enable_notifications: !notificationsEnabled,
       });
-
-      if (!res.ok) throw new Error("Failed to toggle notifications");
-
-      const data = await res.json();
-      if (data.enabled !== undefined) {
-        setNotificationsEnabled(data.enabled);
-      } else {
-        console.warn("Unexpected API response:", data);
-      }
+      setNotificationsEnabled(data.enabled);
     } catch (err) {
       console.error("Error toggling notifications:", err);
       setNotificationsEnabled((prev) => !prev);
@@ -143,8 +91,8 @@ const Notifications = () => {
   };
 
   useEffect(() => {
-    fetchNotifications();
-  }, []);
+    fetchNotifications(currentPage);
+  }, [currentPage]);
 
   return (
     <div className="relative">
