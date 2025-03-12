@@ -56,7 +56,7 @@ export function AuthProvider({ children }) {
       await api.delete("/logout/");
       localStorage.removeItem("access_token");
       setUser(null);
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
     }

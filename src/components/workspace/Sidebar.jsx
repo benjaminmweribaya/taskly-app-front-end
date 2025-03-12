@@ -46,7 +46,7 @@ const Sidebar = () => {
     }
 
     try {
-      const response = await fetch("https://taskly-app-q35u.onrender.com/logout", {
+      const response = await fetch("https://taskly-app-9u0e.onrender.com/logout/", {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
