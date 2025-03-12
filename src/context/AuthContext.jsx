@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../api/axios";
+import api from "../api/axios";
 
 const AuthContext = createContext(null);
 
@@ -15,10 +15,7 @@ export function AuthProvider({ children }) {
         const token = localStorage.getItem("access_token");
         if (!token) throw new Error("No token available");
 
-        const response = await axios.get("/session", {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,
-        });
+        const response = await api.get("/session/");
         setUser(response.data.user);
       } catch (error) {
         setUser(null);
@@ -31,7 +28,7 @@ export function AuthProvider({ children }) {
 
   const register = async (userData) => {
     try {
-      const response = await axios.post("/register/", userData, { withCredentials: true });
+      const response = await api.post("/register/", userData);
       localStorage.setItem("access_token", response.data.access_token);
       setUser(response.data.user);
       navigate(`/workspace/${response.data.user.workspace_id}`);
@@ -43,7 +40,7 @@ export function AuthProvider({ children }) {
 
   const login = async (credentials) => {
     try {
-      const response = await axios.post("/login/", credentials, { withCredentials: true });
+      const response = await api.post("/login/", credentials);
       localStorage.setItem("access_token", response.data.access_token);
       setUser(response.data.user);
       navigate(`/workspace/${response.data.user.workspace_id}`);
@@ -56,7 +53,7 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await axios.delete("/logout/", {}, { withCredentials: true });
+      await api.delete("/logout/");
       localStorage.removeItem("access_token");
       setUser(null);
       navigate("/login");

@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { TextField, Button, MenuItem, FormControl, InputLabel, Select, Typography, Paper, Box, } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 
 const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
   const [error, setError] = useState(null);
@@ -13,12 +13,7 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          "https://taskly-app-9u0e.onrender.com/users/",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await api.get("/users/");
         setUsers(response.data.users);
       } catch (err) {
         console.error("Error fetching users:", err);
@@ -27,7 +22,7 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
     };
 
     fetchUsers();
-  }, [token]);
+  }, []);
 
   const validationSchema = Yup.object({
     title: Yup.string().required("Title is required"),
@@ -36,42 +31,28 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
     priority: Yup.string()
       .oneOf(["low", "medium", "high"], "Invalid priority")
       .required("Priority is required"),
-    assignee: Yup.string().required("Assignee is required"),
+    assignee: Yup.string().nullable(),
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setError(null);
     try {
-      const taskResponse = await axios.post(
-        "https://taskly-app-9u0e.onrender.com/tasks/",
-        {
-          title: values.title,
-          description: values.description,
-          due_date: values.dueDate,
-          priority: values.priority,
-          tasklist_id: tasklistId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const taskResponse = await api.post("/tasks/", {
+        title: values.title,
+        description: values.description,
+        due_date: values.dueDate,
+        priority: values.priority,
+        tasklist_id: tasklistId,
+      });
 
       if (taskResponse.status === 201) {
         const taskId = taskResponse.data.id;
 
-        await axios.post(
-          `https://taskly-app-9u0e.onrender.com/tasks/${taskId}/assign`,
-          { user_ids: [values.assignee] },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        if (values.assignee) {
+          await api.post(`/tasks/${taskId}/assign/`, {
+            user_ids: [values.assignee],
+          });
+        }
 
         onTaskAdded(taskResponse.data);
         resetForm();
@@ -179,14 +160,15 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
 
               <Box mb={3}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel>Assignee</InputLabel>
+                  <InputLabel>Assignee  (Optional)</InputLabel>
                   <Select
                     name="assignee"
                     value={values.assignee}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    label="Assignee"
+                    label="Assignee (Optional)"
                   >
+                    <MenuItem value="">None</MenuItem>
                     {users.map((user) => (
                       <MenuItem key={user.id} value={user.id}>
                         {user.username} ({user.email})
