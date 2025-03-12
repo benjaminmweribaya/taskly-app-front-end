@@ -1,11 +1,10 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { TextField, Button, MenuItem, FormControl, InputLabel, Select, Typography, Paper, Box, } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
 import { useState, useEffect } from "react";
 import api from "../../api/axios";
 
-const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
+const TaskForm = ({ onTaskAdded, task, tasklistId, access_token }) => {
   const [error, setError] = useState(null);
   const [users, setUsers] = useState([]);
 
@@ -13,7 +12,11 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await api.get("/users/");
+        const response = await api.get("/users/",  {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}` 
+          }
+      });
         setUsers(response.data.users);
       } catch (err) {
         console.error("Error fetching users:", err);
@@ -48,7 +51,7 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
       if (taskResponse.status === 201) {
         const taskId = taskResponse.data.id;
 
-        if (values.assignee) {
+        if (values.assignee && values.assignee !== "") {
           await api.post(`/tasks/${taskId}/assign/`, {
             user_ids: [values.assignee],
           });
@@ -181,7 +184,7 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
                 </FormControl>
               </Box>
 
-              <LoadingButton
+              <Button
                 type="submit"
                 variant="contained"
                 color="primary"
@@ -189,7 +192,7 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
                 loading={isSubmitting}
               >
                 {task ? "Update Task" : "Add Task"}
-              </LoadingButton>
+              </Button>
             </Form>
           )}
         </Formik>
