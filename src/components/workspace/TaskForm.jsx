@@ -14,7 +14,7 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          "https://taskly-app-q35u.onrender.com/users",
+          "https://taskly-app-9u0e.onrender.com/users/",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -43,7 +43,7 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
     setError(null);
     try {
       const taskResponse = await axios.post(
-        "https://taskly-app-q35u.onrender.com/tasks",
+        "https://taskly-app-9u0e.onrender.com/tasks/",
         {
           title: values.title,
           description: values.description,
@@ -63,7 +63,7 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, token }) => {
         const taskId = taskResponse.data.id;
 
         await axios.post(
-          `https://taskly-app-q35u.onrender.com/tasks/${taskId}/assign`,
+          `https://taskly-app-9u0e.onrender.com/tasks/${taskId}/assign`,
           { user_ids: [values.assignee] },
           {
             headers: {

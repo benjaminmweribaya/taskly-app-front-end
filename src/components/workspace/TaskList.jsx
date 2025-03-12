@@ -20,7 +20,7 @@ const TaskList = () => {
 
   const fetchTaskLists = async () => {
     try {
-      const response = await api.get("/tasklists", { headers: { Authorization: `Bearer ${authToken}` } });
+      const response = await api.get("/tasklists/", { headers: { Authorization: `Bearer ${authToken}` } });
       const userTaskLists = response.data.reduce((acc, taskList) => {
         acc[taskList.id] = { name: taskList.name, tasks: taskList.tasks || [] };
         return acc;
@@ -35,7 +35,7 @@ const TaskList = () => {
   const addTaskList = async () => {
     const taskListName = `New Task List ${Date.now()}`;
     try {
-      const response = await api.post("/tasklists", { name: taskListName }, { headers: { Authorization: `Bearer ${authToken}` } });
+      const response = await api.post("/tasklists/", { name: taskListName }, { headers: { Authorization: `Bearer ${authToken}` } });
       const new_tasklist_id = response.data.id;
       setTaskLists((prevLists) => ({
         ...prevLists, [new_tasklist_id]: { name: taskListName, tasks: [] },

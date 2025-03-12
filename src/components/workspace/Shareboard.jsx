@@ -63,7 +63,7 @@ const Shareboard = () => {
       setError(null);
       setLoading(true);
 
-      const res = await api.post("/invite", { email: values.email, workspace_id });
+      const res = await api.post("/invite/", { email: values.email, workspace_id });
 
       setPendingInvites([...pendingInvites, { email: values.email, status: "pending", invited_by: "You" }]);
       resetForm();
@@ -79,7 +79,7 @@ const Shareboard = () => {
   const generateInviteLink = async () => {
     try {
       setError(null);
-      const res = await api.post("/invite/generate-link", { workspace_id });
+      const res = await api.post("/invite/generate-link/", { workspace_id });
 
       if (res.status === 200) {
         setInviteLink(res.data.link);

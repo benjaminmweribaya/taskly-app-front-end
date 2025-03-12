@@ -46,7 +46,7 @@ const LoginModal = ({ onClose }) => {
           onSubmit={async (values, { setSubmitting, setErrors }) => {
             try {
               const response = await axios.post(
-                "https://taskly-app-9u0e.onrender.com/login",
+                "https://taskly-app-9u0e.onrender.com/login/",
                 values
               );
              
