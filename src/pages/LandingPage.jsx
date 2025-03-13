@@ -4,6 +4,10 @@ import { motion } from "framer-motion";
 import HeroImage from "../assets/Hero.jpg";
 import FeatureImage from "../assets/Feature.jpg";
 import TeamImage from "../assets/Team.jpg";
+import AutomatedRemindersImage from "../assets/AutomatedReminders.jpg";
+import EasytoUseImage from "../assets/EasytoUse.jpg";
+import SmartSchedulingImage from "../assets/SmartScheduling.jpg";
+import TestimonialImage from "../assets/Testimonial.jpeg";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -135,35 +139,52 @@ const LandingPage = () => {
         />
       </section>
 
+      {/* Task Management Section */}
       <section className="max-w-6xl mx-auto bg-white dark:bg-gray-800 p-10 rounded-lg shadow-md text-center my-12">
         <h2 className="text-3xl font-semibold text-gray-800 dark:text-white">Effortless Task Management</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-          {["task1", "task2", "task3"].map((task, index) => (
-            <motion.div
-              key={index}
-              className="flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-lg"
-              whileHover={{ scale: 1.05 }}
-            >
-              <img src={`/images/${task}.png`} alt={`Task ${index + 1}`} className="w-16 h-16 mb-4" />
-              <p className="text-lg font-medium text-gray-700 dark:text-white">
-                {index === 0 ? "Easy to Use Interface" : index === 1 ? "Smart Scheduling" : "Automated Reminders"}
-              </p>
-            </motion.div>
-          ))}
+          {/* Easy to Use Image Above Task 1 */}
+          <motion.div
+            className="flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-lg"
+            whileHover={{ scale: 1.05 }}
+          >
+            <img src={EasytoUseImage} alt="Easy to Use" className="w-24 h-24 mb-4 rounded-lg shadow-md" />
+            <p className="text-lg font-medium text-gray-700 dark:text-white">Easy to Use Interface</p>
+          </motion.div>
+
+          {/* Smart Scheduling Image Above Task 2 */}
+          <motion.div
+            className="flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-lg"
+            whileHover={{ scale: 1.05 }}
+          >
+            <img src={SmartSchedulingImage} alt="Smart Scheduling" className="w-24 h-24 mb-4 rounded-lg shadow-md" />
+            <p className="text-lg font-medium text-gray-700 dark:text-white">Smart Scheduling</p>
+          </motion.div>
+
+          {/* Automated Reminders Image Above Task 3 */}
+          <motion.div
+            className="flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-lg"
+            whileHover={{ scale: 1.05 }}
+          >
+            <img src={AutomatedRemindersImage} alt="Automated Reminders" className="w-24 h-24 mb-4 rounded-lg shadow-md" />
+            <p className="text-lg font-medium text-gray-700 dark:text-white">Automated Reminders</p>
+          </motion.div>
         </div>
       </section>
 
+      {/* Testimonial Section */}
       <section className="max-w-6xl mx-auto bg-blue-600 text-white p-10 rounded-lg shadow-lg my-12 text-center">
         <blockquote className="flex flex-col items-center">
           <motion.img
-            src="/images/testimonial.jpg"
+            src={TestimonialImage}
             alt="Testimonial"
             className="w-16 h-16 rounded-full border-4 border-white mb-4"
             whileHover={{ scale: 1.1 }}
           />
           <p className="text-xl font-light italic">
-            “Taskly has changed the way our team collaborates. Our productivity has skyrocketed!”
+            “Taskly has changed the way our team collaborates. Our productivity has skyrocketed! Thank you!”
           </p>
+          <p className="mt-4 font-semibold">- Benjamin Baya, Project Manager</p>
         </blockquote>
       </section>
 

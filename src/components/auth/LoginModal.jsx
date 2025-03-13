@@ -13,7 +13,7 @@ const LoginModal = ({ onClose }) => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "https://taskly-app-9u0e.onrender.com/google-login";
+    window.location.href = "https://taskly-app-9u0e.onrender.com/google-login/";
   };
 
   return (
