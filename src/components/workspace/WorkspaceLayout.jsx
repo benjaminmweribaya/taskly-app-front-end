@@ -2,8 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 //import { useEffect } from "react";
 import Dashboard from "./Dashboard.jsx";
 import TaskList from "./TaskList.jsx";
-import TaskDetails from "./TaskDetails.jsx";
-import TaskComments from "./TaskComments.jsx";
+import TaskBoard from "./TaskBoard.jsx";
 import TaskForm from "./TaskForm.jsx";
 import Notifications from "./Notifications.jsx";
 import Sidebar from "./Sidebar.jsx";
@@ -47,8 +46,7 @@ const WorkspaceLayout = () => {
           <Route path="/" element={<Navigate to="/workspace/dashboard" />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/tasks-list" element={<TaskList />} />
-          <Route path="/task/:taskId" element={<TaskDetails />} />
-          <Route path="/task/:taskId/comments" element={<TaskComments />} />
+          <Route path="/task-board" element={<TaskBoard />} />
           <Route path="/create-task" element={<TaskForm />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/shareboard" element={<Shareboard/>} />
