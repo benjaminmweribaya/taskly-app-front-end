@@ -49,7 +49,7 @@ const TaskList = () => {
   const editTaskListName = async (tasklist_id, newTaskListName) => {
     if (!newTaskListName.trim()) return;
     try {
-      await api.put(`/tasklist_id/${tasklist_id}`, { name: newTaskListName }, { headers: { Authorization: `Bearer ${authToken}` } });
+      await api.put(`/tasklists/${tasklist_id}`, { name: newTaskListName }, { headers: { Authorization: `Bearer ${authToken}` } });
 
       setTaskLists((prevLists) => ({
         ...prevLists,
@@ -132,14 +132,14 @@ const TaskList = () => {
                         value={newListTitle}
                         onChange={(e) => setNewListTitle(e.target.value)}
                         onBlur={() => {
-                          if (newListTitle.trim()) {
+                          if (newListTitle.trim() && newListTitle !== taskLists[tasklist_id].name) {
                             editTaskListName(tasklist_id, newListTitle);
                           }
                           setEditingListId(null);
                         }}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
-                            if (newListTitle.trim()) {
+                            if (newListTitle.trim() && newListTitle !== taskLists[tasklist_id].name) {
                               editTaskListName(tasklist_id, newListTitle);
                             }
                             setEditingListId(null);
