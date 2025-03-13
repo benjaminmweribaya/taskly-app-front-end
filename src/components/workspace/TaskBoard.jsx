@@ -21,11 +21,7 @@ const TaskBoard = ({ task, onEditTask, onDragStart }) => {
     };
 
     return (
-        <div
-            draggable
-            onDragStart={(e) => onDragStart(e, task.id)}
-            className="cursor-pointer p-4 bg-white shadow rounded-lg"
-        >
+        <div>
             {task && (
                 <div onClick={() => setIsExpanded(true)} className="cursor-pointer p-4 bg-white shadow rounded-lg">
                     <Typography variant="h6" fontWeight="bold">{task.title}</Typography>

@@ -119,7 +119,7 @@ const TaskList = () => {
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex space-x-4 p-6 overflow-x-auto h-screen bg-gray-100 ml-[260px]">
           {Object.keys(taskLists).map((tasklist_id) => (
-            <Droppable key={tasklist_id} droppableId={tasklist_id}>
+            <Droppable key={tasklist_id} droppableId={String(tasklist_id)}>
               {(provided) => (
                 <Card
                   ref={provided.innerRef}
@@ -162,7 +162,7 @@ const TaskList = () => {
 
                   <div className="flex-1 overflow-y-auto mt-2 space-y-3">
                     {(taskLists[tasklist_id]?.tasks || []).map((task, index) => (
-                      <Draggable key={task.id} draggableId={task.id} index={index}>
+                      <Draggable key={task.id} draggableId={String(task.id)} index={index}>
                         {(provided) => (
                           <div
                             ref={provided.innerRef}
