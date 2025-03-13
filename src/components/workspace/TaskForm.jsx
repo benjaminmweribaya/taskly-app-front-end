@@ -6,26 +6,26 @@ import api from "../../api/axios";
 
 const TaskForm = ({ onTaskAdded, task, tasklistId, access_token }) => {
   const [error, setError] = useState(null);
-  //const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
 
 
-  //useEffect(() => {
-  //const fetchUsers = async () => {
-  //try {
-  //const response = await api.get("/users/",  {
-  // headers: {
-  //Authorization: `Bearer ${localStorage.getItem("access_token")}` 
-  // }
-  //});
-  //setUsers(response.data.users);
-  //} catch (err) {
-  //console.error("Error fetching users:", err);
-  //setError("Failed to fetch users");
-  //}
-  //};
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await api.get("/users/", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`
+          }
+        });
+        setUsers(response.data.users);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        setError("Failed to fetch users");
+      }
+    };
 
-  // fetchUsers();
-  //}, []);
+    fetchUsers();
+  }, []);
 
   const validationSchema = Yup.object({
     title: Yup.string().required("Title is required"),
@@ -34,7 +34,7 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, access_token }) => {
     priority: Yup.string()
       .oneOf(["low", "medium", "high"], "Invalid priority")
       .required("Priority is required"),
-    //assignee: Yup.string().nullable(),
+    assignee: Yup.string().nullable(),
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -47,21 +47,21 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, access_token }) => {
         priority: values.priority,
         tasklist_id: tasklistId,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`, 
-        },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
 
       if (taskResponse.status === 201) {
-        //const taskId = taskResponse.data.id;
+        const taskId = taskResponse.data.id;
 
-        //if (values.assignee && values.assignee !== "") {
-        // await api.post(`/tasks/${taskId}/assign/`, {
-        //user_ids: [values.assignee],
-        //});
-        //}
+        if (values.assignee && values.assignee !== "") {
+          await api.post(`/tasks/${taskId}/assign/`, {
+            user_ids: [values.assignee],
+          });
+        }
 
         onTaskAdded(taskResponse.data);
         resetForm();
@@ -167,8 +167,7 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, access_token }) => {
                 </FormControl>
               </Box>
 
-              {/* Removed the Assignee field */}
-              {/*  < Box mb={3}>
+              < Box mb={3}>
                 <FormControl fullWidth variant="outlined">
                   <InputLabel>Assignee  (Optional)</InputLabel>
                   <Select
@@ -189,7 +188,7 @@ const TaskForm = ({ onTaskAdded, task, tasklistId, access_token }) => {
                     <ErrorMessage name="assignee" />
                   </Typography>
                 </FormControl>
-              </Box > */}
+              </Box >
 
               <Button
                 type="submit"

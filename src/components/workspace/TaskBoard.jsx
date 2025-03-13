@@ -1,19 +1,10 @@
 import React, { useState } from "react";
-import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
-    Button,
-    Typography,
-    List,
-    ListItem,
-    ListItemText
-} from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography, List, ListItem, ListItemText } from "@mui/material";
 
-const TaskBoard = ({ task }) => {
+const TaskBoard = ({ task, onEditTask, onDragStart }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedTask, setEditedTask] = useState({ ...task });
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
 
@@ -24,8 +15,17 @@ const TaskBoard = ({ task }) => {
         }
     };
 
+    const handleSaveChanges = () => {
+        onEditTask(editedTask);
+        setIsEditing(false);
+    };
+
     return (
-        <div>
+        <div
+            draggable
+            onDragStart={(e) => onDragStart(e, task.id)}
+            className="cursor-pointer p-4 bg-white shadow rounded-lg"
+        >
             {task && (
                 <div onClick={() => setIsExpanded(true)} className="cursor-pointer p-4 bg-white shadow rounded-lg">
                     <Typography variant="h6" fontWeight="bold">{task.title}</Typography>
@@ -34,13 +34,56 @@ const TaskBoard = ({ task }) => {
             )}
 
             <Dialog open={isExpanded} onClose={() => setIsExpanded(false)} fullWidth maxWidth="sm">
-                <DialogTitle>{task.title}</DialogTitle>
+                <DialogTitle>
+                    {isEditing ? (
+                        <TextField
+                            fullWidth
+                            value={editedTask.title}
+                            onChange={(e) => setEditedTask({ ...editedTask, title: e.target.value })}
+                        />
+                    ) : (
+                        task.title
+                    )}
+                </DialogTitle>
                 <DialogContent>
-                    <Typography variant="body1" paragraph>{task.description}</Typography>
-                    <Typography variant="body2" color="textSecondary">Assigned to: {task.assignedTo}</Typography>
-                    <Typography variant="body2" color="textSecondary">Priority: {task.priority}</Typography>
-                    <Typography variant="body2" color="textSecondary">Due Date: {task.dueDate}</Typography>
-
+                    {isEditing ? (
+                        <>
+                            <TextField
+                                label="Description"
+                                fullWidth
+                                multiline
+                                value={editedTask.description}
+                                onChange={(e) => setEditedTask({ ...editedTask, description: e.target.value })}
+                                className="mb-2"
+                            />
+                            <TextField
+                                label="Assigned to"
+                                fullWidth
+                                value={editedTask.assignedTo}
+                                onChange={(e) => setEditedTask({ ...editedTask, assignedTo: e.target.value })}
+                            />
+                            <TextField
+                                label="Priority"
+                                fullWidth
+                                value={editedTask.priority}
+                                onChange={(e) => setEditedTask({ ...editedTask, priority: e.target.value })}
+                            />
+                            <TextField
+                                label="Due Date"
+                                fullWidth
+                                type="date"
+                                value={editedTask.dueDate}
+                                onChange={(e) => setEditedTask({ ...editedTask, dueDate: e.target.value })}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <Typography variant="body1" paragraph>{task.description}</Typography>
+                            <Typography variant="body2" color="textSecondary">Assigned to: {task.assignedTo}</Typography>
+                            <Typography variant="body2" color="textSecondary">Priority: {task.priority}</Typography>
+                            <Typography variant="body2" color="textSecondary">Due Date: {task.dueDate}</Typography>
+                        </>
+                    )}
 
                     <Typography variant="h6" className="mt-4">Comments</Typography>
                     <List>
@@ -66,6 +109,11 @@ const TaskBoard = ({ task }) => {
 
                 <DialogActions>
                     <Button onClick={() => setIsExpanded(false)} color="secondary">Close</Button>
+                    {isEditing ? (
+                        <Button onClick={handleSaveChanges} color="primary" variant="contained">Save</Button>
+                    ) : (
+                        <Button onClick={() => setIsEditing(true)} color="primary">Edit</Button>
+                    )}
                     <Button onClick={handleAddComment} color="primary" variant="contained">Add Comment</Button>
                 </DialogActions>
             </Dialog>
